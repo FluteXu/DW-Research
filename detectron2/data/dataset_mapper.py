@@ -77,12 +77,14 @@ class DatasetMapper:
         self.keypoint_hflip_indices = keypoint_hflip_indices
         self.proposal_topk          = precomputed_proposal_topk
         self.recompute_boxes        = recompute_boxes
+        self.image_slice_num        = 3
         # fmt: on
         logger = logging.getLogger(__name__)
         logger.info("Augmentations used in training: " + str(augmentations))
 
     @classmethod
     def from_config(cls, cfg, is_train: bool = True):
+        cls.image_slice_num = cfg.INPUT.SLICE_NUM
         augs = utils.build_augmentation(cfg, is_train)
         if cfg.INPUT.CROP.ENABLED and is_train:
             augs.insert(0, T.RandomCrop(cfg.INPUT.CROP.TYPE, cfg.INPUT.CROP.SIZE))
@@ -110,6 +112,7 @@ class DatasetMapper:
             )
         return ret
 
+
     def __call__(self, dataset_dict):
         """
         Args:
@@ -120,7 +123,9 @@ class DatasetMapper:
         """
         dataset_dict = copy.deepcopy(dataset_dict)  # it will be modified by code below
         # USER: Write your own image loading if it's not from a file
-        image = utils.read_image(dataset_dict["file_name"], format=self.image_format)
+        # image = utils.read_image(dataset_dict["file_name"], format=self.image_format)
+        print(dataset_dict["file_name"])
+        image = utils.read_image_cv2(dataset_dict["file_name"], self.image_slice_num)
         utils.check_image_size(dataset_dict, image)
 
         # USER: Remove if you don't do semantic/panoptic segmentation.

@@ -86,6 +86,16 @@ _C.INPUT.FORMAT = "BGR"
 # Mask R-CNN supports either "polygon" or "bitmask" as ground truth.
 _C.INPUT.MASK_FORMAT = "polygon"  # alternative: "bitmask"
 
+# slice number
+_C.INPUT.SLICE_NUM = 3
+_C.INPUT.NUM_IMAGES_3DCE = 3
+_C.INPUT.IGNORE_EMPTY = True
+
+# transforms
+_C.INPUT.HORIZONTAL_FLIP_PROB_TRAIN = 0.5
+_C.INPUT.VERTICAL_FLIP_PROB_TRAIN = 0.0
+_C.INPUT.Z_FLIP_PROB_TRAIN = 0.0
+_C.INPUT.USE_AFFINE = False
 
 # -----------------------------------------------------------------------------
 # Dataset
