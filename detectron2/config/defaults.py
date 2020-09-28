@@ -91,11 +91,6 @@ _C.INPUT.SLICE_NUM = 3
 _C.INPUT.NUM_IMAGES_3DCE = 3
 _C.INPUT.IGNORE_EMPTY = True
 
-# transforms
-_C.INPUT.HORIZONTAL_FLIP_PROB_TRAIN = 0.5
-_C.INPUT.VERTICAL_FLIP_PROB_TRAIN = 0.0
-_C.INPUT.Z_FLIP_PROB_TRAIN = 0.0
-_C.INPUT.USE_AFFINE = False
 
 # -----------------------------------------------------------------------------
 # Dataset
@@ -143,7 +138,7 @@ _C.MODEL.BACKBONE.NAME = "build_resnet_backbone"
 # Freeze the first several stages so they are not trained.
 # There are 5 stages in ResNet. The first is a convolution, and the following
 # stages are each group of residual blocks.
-_C.MODEL.BACKBONE.FREEZE_AT = 2
+_C.MODEL.BACKBONE.FREEZE_AT = -1
 
 
 # ---------------------------------------------------------------------------- #

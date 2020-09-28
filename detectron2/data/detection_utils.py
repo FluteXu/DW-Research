@@ -615,6 +615,8 @@ def build_augmentation(cfg, is_train):
                 vertical=cfg.INPUT.RANDOM_FLIP == "vertical",
             )
         )
+    if is_train:
+        augmentation.append(T.RandomZFlip())
     return augmentation
 
 

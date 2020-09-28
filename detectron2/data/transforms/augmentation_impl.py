@@ -99,6 +99,20 @@ class RandomFlip(Augmentation):
             return NoOpTransform()
 
 
+class RandomZFlip(Augmentation):
+    def __init__(self, prob=0.5):
+        self._init(locals())
+
+    def __call__(self, image, target):
+        print('RandomZFlip img shape:', image.shape)
+        do = self._rand_range() < self.prob
+        if do:
+            image = np.flip(image, axis=2)
+            return image, target
+        else:
+            return NoOpTransform()
+
+
 class Resize(Augmentation):
     """ Resize image to a fixed target size"""
 
