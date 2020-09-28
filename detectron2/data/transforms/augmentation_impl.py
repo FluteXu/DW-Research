@@ -15,7 +15,7 @@ from fvcore.transforms.transform import (
 from PIL import Image
 
 from .augmentation import Augmentation, _transform_to_aug
-from .transform import ExtentTransform, ResizeTransform, RotationTransform
+from .transform import ExtentTransform, ResizeTransform, RotationTransform, ZFlipTransform
 
 __all__ = [
     "RandomApply",
@@ -24,6 +24,7 @@ __all__ = [
     "RandomCrop",
     "RandomExtent",
     "RandomFlip",
+    "RandomZFlip",
     "RandomSaturation",
     "RandomLighting",
     "RandomRotation",
@@ -103,12 +104,10 @@ class RandomZFlip(Augmentation):
     def __init__(self, prob=0.5):
         self._init(locals())
 
-    def __call__(self, image, target):
-        print('RandomZFlip img shape:', image.shape)
+    def get_transform(self):
         do = self._rand_range() < self.prob
         if do:
-            image = np.flip(image, axis=2)
-            return image, target
+            return ZFlipTransform()
         else:
             return NoOpTransform()
 

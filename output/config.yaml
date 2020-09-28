@@ -27,7 +27,6 @@ INPUT:
     - 0.9
     TYPE: relative_range
   FORMAT: BGR
-  HORIZONTAL_FLIP_PROB_TRAIN: 0.5
   IGNORE_EMPTY: true
   MASK_FORMAT: polygon
   MAX_SIZE_TEST: 1333
@@ -43,9 +42,6 @@ INPUT:
   NUM_IMAGES_3DCE: 3
   RANDOM_FLIP: horizontal
   SLICE_NUM: 9
-  USE_AFFINE: false
-  VERTICAL_FLIP_PROB_TRAIN: 0.0
-  Z_FLIP_PROB_TRAIN: 0.5
 MODEL:
   ANCHOR_GENERATOR:
     ANGLES:
@@ -65,7 +61,7 @@ MODEL:
     - - 256
     - - 512
   BACKBONE:
-    FREEZE_AT: 2
+    FREEZE_AT: -1
     NAME: build_resnet_fpn_backbone
   DEVICE: cuda
   FPN:
