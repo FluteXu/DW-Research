@@ -46,7 +46,8 @@ class DatasetMapper:
         instance_mask_format: str = "polygon",
         keypoint_hflip_indices: Optional[np.ndarray] = None,
         precomputed_proposal_topk: Optional[int] = None,
-        recompute_boxes: bool = False
+        recompute_boxes: bool = False,
+        image_slice_num: int = 3
     ):
         """
         NOTE: this interface is experimental.
@@ -77,6 +78,7 @@ class DatasetMapper:
         self.keypoint_hflip_indices = keypoint_hflip_indices
         self.proposal_topk          = precomputed_proposal_topk
         self.recompute_boxes        = recompute_boxes
+        self.image_slice_num        = image_slice_num
         # fmt: on
         logger = logging.getLogger(__name__)
         logger.info("Augmentations used in training: " + str(augmentations))
@@ -98,6 +100,7 @@ class DatasetMapper:
             "instance_mask_format": cfg.INPUT.MASK_FORMAT,
             "use_keypoint": cfg.MODEL.KEYPOINT_ON,
             "recompute_boxes": recompute_boxes,
+            "image_slice_num": cfg.INPUT.SLICE_NUM,
         }
         if cfg.MODEL.KEYPOINT_ON:
             ret["keypoint_hflip_indices"] = utils.create_keypoint_hflip_indices(cfg.DATASETS.TRAIN)
@@ -110,26 +113,6 @@ class DatasetMapper:
             )
         return ret
 
-    # @classmethod
-    # def _load_image_cv2(root, path):
-    #     n_neigh = cfg.INPUT.SLICE_NUM
-    #     sub_dir = os.path.dirname(path)
-    #     cent_slice = int(re.findall(re.compile(r'/(\d+).png'), path)[0])
-    #     assert n_neigh % 2 == 1, "#input slices should be odd"
-    #     half_n_neigh = n_neigh // 2
-    #
-    #     paths = [[], []]
-    #     for offset in range(half_n_neigh + 1):
-    #         for sign, container in zip([-1, 1], paths):
-    #             slice_id = cent_slice + offset * sign
-    #             fpath = os.path.join(root, sub_dir, '{:03d}.png'.format(slice_id))
-    #             if not os.path.exists(fpath):
-    #                 fpath = container[-1]
-    #             container.append(fpath)
-    #     paths = paths[0][::-1] + paths[1][1:]
-    #     channels = [cv2.imread(fpath, cv2.IMREAD_UNCHANGED) for fpath in paths]
-    #     return np.stack(channels, axis=2)
-
 
     def __call__(self, dataset_dict):
         """
@@ -141,8 +124,8 @@ class DatasetMapper:
         """
         dataset_dict = copy.deepcopy(dataset_dict)  # it will be modified by code below
         # USER: Write your own image loading if it's not from a file
-        import pdb; pdb.set_trace()
-        image = utils.read_image(dataset_dict["file_name"], format=self.image_format)
+        # image = utils.read_image(dataset_dict["file_name"], format=self.image_format)
+        image = utils.read_image_cv2(dataset_dict["file_name"], self.image_slice_num)
         utils.check_image_size(dataset_dict, image)
 
         # USER: Remove if you don't do semantic/panoptic segmentation.

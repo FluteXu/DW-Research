@@ -140,6 +140,23 @@ COCO_CATEGORIES = [
     {"color": [250, 141, 255], "isthing": 0, "id": 200, "name": "rug-merged"},
 ]
 
+LESION_CATEGORIES = [
+    {"color": [220, 20, 60], "isthing": 1, "id": 1, "name": u'心包增厚'},
+    {"color": [119, 11, 32], "isthing": 1, "id": 2, "name": u'心包积液'},
+    {"color": [0, 0, 142], "isthing": 1, "id": 3, "name": u'心包钙化'},
+    {"color": [0, 0, 230], "isthing": 1, "id": 4, "name": u'食管裂孔疝'},
+    {"color": [106, 0, 228], "isthing": 1, "id": 5, "name": u'甲状腺结节'},
+    {"color": [0, 60, 100], "isthing": 1, "id": 6, "name": u'冠状动脉钙化/支架影'},
+    {"color": [0, 80, 100], "isthing": 1, "id": 7, "name": u'主动脉壁间血肿'},
+    {"color": [0, 0, 70], "isthing": 1, "id": 8, "name": u'主动脉内膜钙化移位'},
+    {"color": [0, 0, 192], "isthing": 1, "id": 9, "name": u'二尖瓣钙化'},
+    {"color": [250, 170, 30], "isthing": 1, "id": 10, "name": u'主动脉瓣钙化'},
+    {"color": [100, 170, 30], "isthing": 1, "id": 11, "name": u'纵隔结节肿块'},
+    {"color": [220, 220, 0], "isthing": 1, "id": 12, "name": u'膈淋巴肿'},
+    {"color": [175, 116, 175], "isthing": 1, "id": 13, "name": u'腋窝淋巴肿'},
+    {"color": [250, 0, 30], "isthing": 1, "id": 14, "name": u'內乳淋巴肿'},
+]
+
 # fmt: off
 COCO_PERSON_KEYPOINT_NAMES = (
     "nose",
@@ -210,6 +227,21 @@ def _get_coco_instances_meta():
     return ret
 
 
+def _get_coco_lesion_meta():
+    thing_ids = [k["id"] for k in LESION_CATEGORIES if k["isthing"] == 1]
+    thing_colors = [k["color"] for k in LESION_CATEGORIES if k["isthing"] == 1]
+    assert len(thing_ids) == 14, len(thing_ids)
+    # Mapping from the incontiguous COCO category id to an id in [0, 79]
+    thing_dataset_id_to_contiguous_id = {k: i for i, k in enumerate(thing_ids)}
+    thing_classes = [k["name"] for k in LESION_CATEGORIES if k["isthing"] == 1]
+    ret = {
+        "thing_dataset_id_to_contiguous_id": thing_dataset_id_to_contiguous_id,
+        "thing_classes": thing_classes,
+        "thing_colors": thing_colors,
+    }
+    return ret
+
+
 def _get_coco_panoptic_separated_meta():
     """
     Returns metadata for "separated" version of the panoptic segmentation dataset.
@@ -244,6 +276,8 @@ def _get_coco_panoptic_separated_meta():
 
 
 def _get_builtin_metadata(dataset_name):
+    if dataset_name == "coco_lesion":
+        return _get_coco_lesion_meta()
     if dataset_name == "coco":
         return _get_coco_instances_meta()
     if dataset_name == "coco_panoptic_separated":

@@ -5,6 +5,9 @@
 Common data processing utilities that are used in a
 typical object detection data pipeline.
 """
+import os
+import re
+import cv2
 import logging
 import numpy as np
 import pycocotools.mask as mask_util
@@ -181,6 +184,32 @@ def read_image(file_name, format=None):
         # work around this bug: https://github.com/python-pillow/Pillow/issues/3973
         image = _apply_exif_orientation(image)
         return convert_PIL_to_numpy(image, format)
+
+
+def read_image_cv2(c_path, n_neigh):
+    """
+    Multiple-slice input
+    Args:
+        c_path (str): center image path
+        n_neigh (int): input slice number
+    """
+
+    img_path= c_path[: -len(c_path.split('/')[-1])]
+    cent_slice = int(re.findall(re.compile(r'/(\d+).png'), c_path)[0])
+    assert n_neigh % 2 == 1, "#input slices should be odd"
+    half_n_neigh = n_neigh // 2
+
+    paths = [[], []]
+    for offset in range(half_n_neigh+1):
+        for sign, container in zip([-1, 1], paths):
+            slice_id = cent_slice + offset * sign
+            f_path = os.path.join(img_path, '{:03d}.png'.format(slice_id))
+            if not os.path.exists(f_path):
+                f_path = container[-1]
+            container.append(f_path)
+    paths = paths[0][::-1] + paths[1][1:]
+    channels = [cv2.imread(f_path, cv2.IMREAD_UNCHANGED) for f_path in paths]
+    return np.stack(channels, axis=2)
 
 
 def check_image_size(dataset_dict, image):
@@ -586,6 +615,8 @@ def build_augmentation(cfg, is_train):
                 vertical=cfg.INPUT.RANDOM_FLIP == "vertical",
             )
         )
+    if is_train:
+        augmentation.append(T.RandomZFlip())
     return augmentation
 
 

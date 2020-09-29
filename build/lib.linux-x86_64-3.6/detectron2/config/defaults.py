@@ -86,6 +86,11 @@ _C.INPUT.FORMAT = "BGR"
 # Mask R-CNN supports either "polygon" or "bitmask" as ground truth.
 _C.INPUT.MASK_FORMAT = "polygon"  # alternative: "bitmask"
 
+# slice number
+_C.INPUT.SLICE_NUM = 3
+_C.INPUT.NUM_IMAGES_3DCE = 3
+_C.INPUT.IGNORE_EMPTY = True
+
 
 # -----------------------------------------------------------------------------
 # Dataset
@@ -133,7 +138,23 @@ _C.MODEL.BACKBONE.NAME = "build_resnet_backbone"
 # Freeze the first several stages so they are not trained.
 # There are 5 stages in ResNet. The first is a convolution, and the following
 # stages are each group of residual blocks.
-_C.MODEL.BACKBONE.FREEZE_AT = 2
+_C.MODEL.BACKBONE.FREEZE_AT = -1
+
+
+# ---------------------------------------------------------------------------- #
+# VOVNet options
+# ---------------------------------------------------------------------------- #
+_C.MODEL.VOVNET = CN()
+
+_C.MODEL.VOVNET.CONV_BODY = "V-39-eSE"
+_C.MODEL.VOVNET.OUT_FEATURES = ["stage2", "stage3", "stage4", "stage5"]
+
+# Options: FrozenBN, GN, "SyncBN", "BN"
+_C.MODEL.VOVNET.NORM = "FrozenBN"
+
+_C.MODEL.VOVNET.OUT_CHANNELS = 256
+
+_C.MODEL.VOVNET.BACKBONE_OUT_CHANNELS = 256
 
 
 # ---------------------------------------------------------------------------- #

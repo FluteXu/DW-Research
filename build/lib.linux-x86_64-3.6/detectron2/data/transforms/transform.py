@@ -23,10 +23,13 @@ except ImportError:
 __all__ = [
     "ExtentTransform",
     "ResizeTransform",
+    "ZFlipTransform",
     "RotationTransform",
     "ColorTransform",
     "PILColorTransform",
 ]
+
+INTER_MODE = {'NEAREST': cv2.INTER_NEAREST, 'BILINEAR': cv2.INTER_LINEAR, 'BICUBIC': cv2.INTER_CUBIC}
 
 
 class ExtentTransform(Transform):
@@ -94,14 +97,17 @@ class ResizeTransform(Transform):
         """
         # TODO decide on PIL vs opencv
         super().__init__()
-        if interp is None:
-            interp = Image.BILINEAR
+        if interp is None or interp == Image.BILINEAR:
+            # interp = Image.BILINEAR
+            interp = 'BILINEAR'
+
         self._set_attributes(locals())
 
     def apply_image(self, img, interp=None):
         assert img.shape[:2] == (self.h, self.w)
         assert len(img.shape) <= 4
 
+        """
         if img.dtype == np.uint8:
             pil_image = Image.fromarray(img)
             interp_method = interp if interp is not None else self.interp
@@ -120,7 +126,11 @@ class ResizeTransform(Transform):
             img = F.interpolate(img, (self.new_h, self.new_w), mode=mode, align_corners=False)
             shape[:2] = (self.new_h, self.new_w)
             ret = img.permute(2, 3, 0, 1).view(shape).numpy()  # nchw -> hw(c)
+        """
 
+        # CVF method instead of TVF method
+        interp_method = interp if interp is not None else self.interp
+        ret = cv2.resize(img, dsize=(self.w, self.h), interpolation=INTER_MODE[interp_method])
         return ret
 
     def apply_coords(self, coords):
@@ -134,6 +144,28 @@ class ResizeTransform(Transform):
 
     def inverse(self):
         return ResizeTransform(self.new_h, self.new_w, self.h, self.w, self.interp)
+
+
+class ZFlipTransform(Transform):
+    """
+    Flip the image along z-axis
+    """
+    def __init__(self):
+        super().__init__()
+        self._set_attributes(locals())
+
+    def apply_image(self, img):
+        ret = np.flip(img, axis=2)
+        return ret
+
+    def apply_coords(self, coords):
+        return coords
+
+    def apply_segmentation(self, segmentation):
+        return segmentation
+
+    def inverse(self):
+        return ZFlipTransform()
 
 
 class RotationTransform(Transform):

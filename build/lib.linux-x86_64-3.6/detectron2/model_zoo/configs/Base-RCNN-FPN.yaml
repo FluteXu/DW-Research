@@ -1,4 +1,12 @@
+INPUT:
+  SLICE_NUM: 9
+  NUM_IMAGES_3DCE: 3
+  MIN_SIZE_TRAIN: (400, 600, 800, 1000, 1200)
+  MAX_SIZE_TRAIN: 1200
+  IGNORE_EMPTY: True
 MODEL:
+  PIXEL_MEAN: [0, 0, 0, 0, 0, 0, 0, 0, 0]
+  PIXEL_STD: [1., 1., 1., 1., 1., 1., 1., 1., 1.]
   META_ARCHITECTURE: "GeneralizedRCNN"
   BACKBONE:
     NAME: "build_resnet_fpn_backbone"
@@ -30,13 +38,11 @@ MODEL:
     NUM_CONV: 4
     POOLER_RESOLUTION: 14
 DATASETS:
-  TRAIN: ("coco_2017_train",)
-  TEST: ("coco_2017_val",)
+  TRAIN: ("coco_tjmu_14f2", "coco_tjmu1_14f2", "coco_tjmu2_14f2", "coco_lgmn_14f2",)
+  TEST: ("coco_test_all",)
 SOLVER:
   IMS_PER_BATCH: 16
   BASE_LR: 0.02
   STEPS: (60000, 80000)
   MAX_ITER: 90000
-INPUT:
-  MIN_SIZE_TRAIN: (640, 672, 704, 736, 768, 800)
 VERSION: 2
