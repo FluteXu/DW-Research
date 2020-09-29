@@ -293,7 +293,7 @@ MODEL:
     - stage3
     - stage4
     - stage5
-  WEIGHTS: /home/xudi/.cache/torch/checkpoints/vovnet39_ese_detectron2.pth
+  WEIGHTS: /home/wangcheng/ms-project/checkpoints/MRCN-V2-39-3x/vovnet39_ese_detectron2.pth
 OUTPUT_DIR: checkpoints/MRCN-V2-39-3x
 SEED: -1
 SOLVER:

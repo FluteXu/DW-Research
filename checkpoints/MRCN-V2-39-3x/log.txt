@@ -1870,3 +1870,1933 @@ Traceback (most recent call last):
 FloatingPointError: Predicted boxes or scores contain Inf/NaN. Training has diverged.
 [09/29 15:06:59] d2.engine.hooks INFO: Overall training speed: 241 iterations in 0:00:43 (0.1801 s / it)
 [09/29 15:06:59] d2.engine.hooks INFO: Total training time: 0:00:43 (0:00:00 on hooks)
+[09/29 15:25:31] detectron2 INFO: Rank of current process: 0. World size: 1
+[09/29 15:25:35] detectron2 INFO: Environment info:
+----------------------  ------------------------------------------------------------------------------------
+sys.platform            linux
+Python                  3.6.12 |Anaconda, Inc.| (default, Sep  8 2020, 23:10:56) [GCC 7.3.0]
+numpy                   1.19.1
+detectron2              0.2.1 @/home/wangcheng/ms-project/detectron2
+Compiler                GCC 5.4
+CUDA compiler           CUDA 10.1
+detectron2 arch flags   7.5
+DETECTRON2_ENV_MODULE   <not set>
+PyTorch                 1.6.0 @/home/wangcheng/anaconda2/envs/msconv/lib/python3.6/site-packages/torch
+PyTorch debug build     False
+GPU available           True
+GPU 0                   TITAN RTX (arch=7.5)
+CUDA_HOME               /usr/local/cuda
+Pillow                  7.2.0
+torchvision             0.7.0 @/home/wangcheng/anaconda2/envs/msconv/lib/python3.6/site-packages/torchvision
+torchvision arch flags  3.5, 5.0, 6.0, 7.0, 7.5
+fvcore                  0.1.2.post20200912
+cv2                     4.4.0
+----------------------  ------------------------------------------------------------------------------------
+PyTorch built with:
+  - GCC 7.3
+  - C++ Version: 201402
+  - Intel(R) Math Kernel Library Version 2020.0.2 Product Build 20200624 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v1.5.0 (Git Hash e2ac1fac44c5078ca927cb9b90e1b3066a0b2ed0)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - NNPACK is enabled
+  - CPU capability usage: AVX2
+  - CUDA Runtime 10.1
+  - NVCC architecture flags: -gencode;arch=compute_37,code=sm_37;-gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_61,code=sm_61;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_37,code=compute_37
+  - CuDNN 7.6.3
+  - Magma 2.5.2
+  - Build settings: BLAS=MKL, BUILD_TYPE=Release, CXX_FLAGS= -Wno-deprecated -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -fopenmp -DNDEBUG -DUSE_FBGEMM -DUSE_QNNPACK -DUSE_PYTORCH_QNNPACK -DUSE_XNNPACK -DUSE_VULKAN_WRAPPER -O2 -fPIC -Wno-narrowing -Wall -Wextra -Werror=return-type -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wno-sign-compare -Wno-unused-parameter -Wno-unused-variable -Wno-unused-function -Wno-unused-result -Wno-unused-local-typedefs -Wno-strict-overflow -Wno-strict-aliasing -Wno-error=deprecated-declarations -Wno-stringop-overflow -Wno-error=pedantic -Wno-error=redundant-decls -Wno-error=old-style-cast -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Wno-stringop-overflow, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, PERF_WITH_AVX512=1, USE_CUDA=ON, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=ON, USE_NNPACK=ON, USE_OPENMP=ON, USE_STATIC_DISPATCH=OFF, 
+
+[09/29 15:25:35] detectron2 INFO: Command line arguments: Namespace(config_file='configs/vovnet/mask_rcnn_V_39_FPN_3x.yaml', dist_url='tcp://127.0.0.1:50890', eval_only=False, machine_rank=0, num_gpus=1, num_machines=1, opts=['SOLVER.IMS_PER_BATCH', '2', 'DATALOADER.NUM_WORKERS', '1'], resume=False)
+[09/29 15:25:35] detectron2 INFO: Contents of args.config_file=configs/vovnet/mask_rcnn_V_39_FPN_3x.yaml:
+_BASE_: "../Base-RCNN-VoVNet-FPN.yaml"
+MODEL:
+  WEIGHTS: "/home/xudi/.cache/torch/checkpoints/vovnet39_ese_detectron2.pth" # "https://www.dropbox.com/s/q98pypf96rhtd8y/vovnet39_ese_detectron2.pth?dl=1"
+  MASK_ON: True
+  VOVNET:
+    CONV_BODY : "V-39-eSE"
+SOLVER:
+  STEPS: (210000, 250000)
+  MAX_ITER: 270000
+OUTPUT_DIR: "checkpoints/MRCN-V2-39-3x"
+[09/29 15:25:35] detectron2 INFO: Running with full config:
+CUDNN_BENCHMARK: False
+DATALOADER:
+  ASPECT_RATIO_GROUPING: True
+  FILTER_EMPTY_ANNOTATIONS: True
+  NUM_WORKERS: 1
+  REPEAT_THRESHOLD: 0.0
+  SAMPLER_TRAIN: TrainingSampler
+DATASETS:
+  PRECOMPUTED_PROPOSAL_TOPK_TEST: 1000
+  PRECOMPUTED_PROPOSAL_TOPK_TRAIN: 2000
+  PROPOSAL_FILES_TEST: ()
+  PROPOSAL_FILES_TRAIN: ()
+  TEST: ('coco_test_all',)
+  TRAIN: ('coco_tjmu_14f2', 'coco_tjmu1_14f2', 'coco_tjmu2_14f2', 'coco_lgmn_14f2')
+GLOBAL:
+  HACK: 1.0
+INPUT:
+  CROP:
+    ENABLED: False
+    SIZE: [0.9, 0.9]
+    TYPE: relative_range
+  FORMAT: BGR
+  IGNORE_EMPTY: True
+  MASK_FORMAT: polygon
+  MAX_SIZE_TEST: 1333
+  MAX_SIZE_TRAIN: 1200
+  MIN_SIZE_TEST: 800
+  MIN_SIZE_TRAIN: (400, 600, 800, 1000, 1200)
+  MIN_SIZE_TRAIN_SAMPLING: choice
+  NUM_IMAGES_3DCE: 3
+  RANDOM_FLIP: horizontal
+  SLICE_NUM: 9
+MODEL:
+  ANCHOR_GENERATOR:
+    ANGLES: [[-90, 0, 90]]
+    ASPECT_RATIOS: [[0.5, 1.0, 2.0]]
+    NAME: DefaultAnchorGenerator
+    OFFSET: 0.0
+    SIZES: [[32], [64], [128], [256], [512]]
+  BACKBONE:
+    FREEZE_AT: 0
+    NAME: build_vovnet_fpn_backbone
+  DEVICE: cuda
+  FPN:
+    FUSE_TYPE: sum
+    IN_FEATURES: ['stage2', 'stage3', 'stage4', 'stage5']
+    NORM: 
+    OUT_CHANNELS: 256
+  KEYPOINT_ON: False
+  LOAD_PROPOSALS: False
+  MASK_ON: True
+  META_ARCHITECTURE: GeneralizedRCNN
+  PANOPTIC_FPN:
+    COMBINE:
+      ENABLED: True
+      INSTANCES_CONFIDENCE_THRESH: 0.5
+      OVERLAP_THRESH: 0.5
+      STUFF_AREA_LIMIT: 4096
+    INSTANCE_LOSS_WEIGHT: 1.0
+  PIXEL_MEAN: [0, 0, 0, 0, 0, 0, 0, 0, 0]
+  PIXEL_STD: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+  PROPOSAL_GENERATOR:
+    MIN_SIZE: 0
+    NAME: RPN
+  RESNETS:
+    DEFORM_MODULATED: False
+    DEFORM_NUM_GROUPS: 1
+    DEFORM_ON_PER_STAGE: [False, False, False, False]
+    DEPTH: 50
+    NORM: FrozenBN
+    NUM_GROUPS: 1
+    OUT_FEATURES: ['res4']
+    RES2_OUT_CHANNELS: 256
+    RES5_DILATION: 1
+    STEM_OUT_CHANNELS: 64
+    STRIDE_IN_1X1: True
+    WIDTH_PER_GROUP: 64
+  RETINANET:
+    BBOX_REG_LOSS_TYPE: smooth_l1
+    BBOX_REG_WEIGHTS: (1.0, 1.0, 1.0, 1.0)
+    FOCAL_LOSS_ALPHA: 0.25
+    FOCAL_LOSS_GAMMA: 2.0
+    IN_FEATURES: ['p3', 'p4', 'p5', 'p6', 'p7']
+    IOU_LABELS: [0, -1, 1]
+    IOU_THRESHOLDS: [0.4, 0.5]
+    NMS_THRESH_TEST: 0.5
+    NORM: 
+    NUM_CLASSES: 80
+    NUM_CONVS: 4
+    PRIOR_PROB: 0.01
+    SCORE_THRESH_TEST: 0.05
+    SMOOTH_L1_LOSS_BETA: 0.1
+    TOPK_CANDIDATES_TEST: 1000
+  ROI_BOX_CASCADE_HEAD:
+    BBOX_REG_WEIGHTS: ((10.0, 10.0, 5.0, 5.0), (20.0, 20.0, 10.0, 10.0), (30.0, 30.0, 15.0, 15.0))
+    IOUS: (0.5, 0.6, 0.7)
+  ROI_BOX_HEAD:
+    BBOX_REG_LOSS_TYPE: smooth_l1
+    BBOX_REG_LOSS_WEIGHT: 1.0
+    BBOX_REG_WEIGHTS: (10.0, 10.0, 5.0, 5.0)
+    CLS_AGNOSTIC_BBOX_REG: False
+    CONV_DIM: 256
+    FC_DIM: 1024
+    NAME: FastRCNNConvFCHead
+    NORM: 
+    NUM_CONV: 0
+    NUM_FC: 2
+    POOLER_RESOLUTION: 7
+    POOLER_SAMPLING_RATIO: 0
+    POOLER_TYPE: ROIAlignV2
+    SMOOTH_L1_BETA: 0.0
+    TRAIN_ON_PRED_BOXES: False
+  ROI_HEADS:
+    BATCH_SIZE_PER_IMAGE: 512
+    IN_FEATURES: ['p2', 'p3', 'p4', 'p5']
+    IOU_LABELS: [0, 1]
+    IOU_THRESHOLDS: [0.5]
+    NAME: StandardROIHeads
+    NMS_THRESH_TEST: 0.5
+    NUM_CLASSES: 80
+    POSITIVE_FRACTION: 0.25
+    PROPOSAL_APPEND_GT: True
+    SCORE_THRESH_TEST: 0.05
+  ROI_KEYPOINT_HEAD:
+    CONV_DIMS: (512, 512, 512, 512, 512, 512, 512, 512)
+    LOSS_WEIGHT: 1.0
+    MIN_KEYPOINTS_PER_IMAGE: 1
+    NAME: KRCNNConvDeconvUpsampleHead
+    NORMALIZE_LOSS_BY_VISIBLE_KEYPOINTS: True
+    NUM_KEYPOINTS: 17
+    POOLER_RESOLUTION: 14
+    POOLER_SAMPLING_RATIO: 0
+    POOLER_TYPE: ROIAlignV2
+  ROI_MASK_HEAD:
+    CLS_AGNOSTIC_MASK: False
+    CONV_DIM: 256
+    NAME: MaskRCNNConvUpsampleHead
+    NORM: 
+    NUM_CONV: 4
+    POOLER_RESOLUTION: 14
+    POOLER_SAMPLING_RATIO: 0
+    POOLER_TYPE: ROIAlignV2
+  RPN:
+    BATCH_SIZE_PER_IMAGE: 256
+    BBOX_REG_LOSS_TYPE: smooth_l1
+    BBOX_REG_LOSS_WEIGHT: 1.0
+    BBOX_REG_WEIGHTS: (1.0, 1.0, 1.0, 1.0)
+    BOUNDARY_THRESH: -1
+    HEAD_NAME: StandardRPNHead
+    IN_FEATURES: ['p2', 'p3', 'p4', 'p5', 'p6']
+    IOU_LABELS: [0, -1, 1]
+    IOU_THRESHOLDS: [0.3, 0.7]
+    LOSS_WEIGHT: 1.0
+    NMS_THRESH: 0.7
+    POSITIVE_FRACTION: 0.5
+    POST_NMS_TOPK_TEST: 1000
+    POST_NMS_TOPK_TRAIN: 1000
+    PRE_NMS_TOPK_TEST: 1000
+    PRE_NMS_TOPK_TRAIN: 2000
+    SMOOTH_L1_BETA: 0.0
+  SEM_SEG_HEAD:
+    COMMON_STRIDE: 4
+    CONVS_DIM: 128
+    IGNORE_VALUE: 255
+    IN_FEATURES: ['p2', 'p3', 'p4', 'p5']
+    LOSS_WEIGHT: 1.0
+    NAME: SemSegFPNHead
+    NORM: GN
+    NUM_CLASSES: 54
+  VOVNET:
+    BACKBONE_OUT_CHANNELS: 256
+    CONV_BODY: V-39-eSE
+    NORM: FrozenBN
+    OUT_CHANNELS: 256
+    OUT_FEATURES: ['stage2', 'stage3', 'stage4', 'stage5']
+  WEIGHTS: /home/xudi/.cache/torch/checkpoints/vovnet39_ese_detectron2.pth
+OUTPUT_DIR: checkpoints/MRCN-V2-39-3x
+SEED: -1
+SOLVER:
+  BASE_LR: 0.02
+  BIAS_LR_FACTOR: 1.0
+  CHECKPOINT_PERIOD: 5000
+  CLIP_GRADIENTS:
+    CLIP_TYPE: value
+    CLIP_VALUE: 1.0
+    ENABLED: False
+    NORM_TYPE: 2.0
+  GAMMA: 0.1
+  IMS_PER_BATCH: 2
+  LR_SCHEDULER_NAME: WarmupMultiStepLR
+  MAX_ITER: 270000
+  MOMENTUM: 0.9
+  NESTEROV: False
+  REFERENCE_WORLD_SIZE: 0
+  STEPS: (210000, 250000)
+  WARMUP_FACTOR: 0.001
+  WARMUP_ITERS: 1000
+  WARMUP_METHOD: linear
+  WEIGHT_DECAY: 0.0001
+  WEIGHT_DECAY_BIAS: 0.0001
+  WEIGHT_DECAY_NORM: 0.0
+TEST:
+  AUG:
+    ENABLED: False
+    FLIP: True
+    MAX_SIZE: 4000
+    MIN_SIZES: (400, 500, 600, 700, 800, 900, 1000, 1100, 1200)
+  DETECTIONS_PER_IMAGE: 100
+  EVAL_PERIOD: 0
+  EXPECTED_RESULTS: []
+  KEYPOINT_OKS_SIGMAS: []
+  PRECISE_BN:
+    ENABLED: False
+    NUM_ITER: 200
+VERSION: 2
+VIS_PERIOD: 0
+[09/29 15:25:35] detectron2 INFO: Full config saved to checkpoints/MRCN-V2-39-3x/config.yaml
+[09/29 15:25:35] d2.utils.env INFO: Using a generated random seed 35179925
+[09/29 15:25:54] d2.engine.defaults INFO: Model:
+GeneralizedRCNN(
+  (backbone): FPN(
+    (fpn_lateral2): Conv2d(256, 256, kernel_size=(1, 1), stride=(1, 1))
+    (fpn_output2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (fpn_lateral3): Conv2d(512, 256, kernel_size=(1, 1), stride=(1, 1))
+    (fpn_output3): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (fpn_lateral4): Conv2d(768, 256, kernel_size=(1, 1), stride=(1, 1))
+    (fpn_output4): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (fpn_lateral5): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1))
+    (fpn_output5): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (top_block): LastLevelMaxPool()
+    (bottom_up): VoVNet(
+      (stem): Sequential(
+        (stem_1/conv): Conv2d(9, 64, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+        (stem_1/norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+        (stem_1/relu): ReLU(inplace=True)
+        (stem_2/conv): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        (stem_2/norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+        (stem_2/relu): ReLU(inplace=True)
+        (stem_3/conv): Conv2d(64, 128, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+        (stem_3/norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+        (stem_3/relu): ReLU(inplace=True)
+      )
+      (stage2): _OSA_stage(
+        (OSA2_1): _OSA_module(
+          (layers): ModuleList(
+            (0): Sequential(
+              (OSA2_1_0/conv): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA2_1_0/norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+              (OSA2_1_0/relu): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (OSA2_1_1/conv): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA2_1_1/norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+              (OSA2_1_1/relu): ReLU(inplace=True)
+            )
+            (2): Sequential(
+              (OSA2_1_2/conv): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA2_1_2/norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+              (OSA2_1_2/relu): ReLU(inplace=True)
+            )
+            (3): Sequential(
+              (OSA2_1_3/conv): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA2_1_3/norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+              (OSA2_1_3/relu): ReLU(inplace=True)
+            )
+            (4): Sequential(
+              (OSA2_1_4/conv): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA2_1_4/norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+              (OSA2_1_4/relu): ReLU(inplace=True)
+            )
+          )
+          (concat): Sequential(
+            (OSA2_1_concat/conv): Conv2d(768, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (OSA2_1_concat/norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            (OSA2_1_concat/relu): ReLU(inplace=True)
+          )
+          (ese): eSEModule(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (fc): Conv2d(256, 256, kernel_size=(1, 1), stride=(1, 1))
+            (hsigmoid): Hsigmoid()
+          )
+        )
+      )
+      (stage3): _OSA_stage(
+        (Pooling): MaxPool2d(kernel_size=3, stride=2, padding=0, dilation=1, ceil_mode=True)
+        (OSA3_1): _OSA_module(
+          (layers): ModuleList(
+            (0): Sequential(
+              (OSA3_1_0/conv): Conv2d(256, 160, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA3_1_0/norm): FrozenBatchNorm2d(num_features=160, eps=1e-05)
+              (OSA3_1_0/relu): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (OSA3_1_1/conv): Conv2d(160, 160, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA3_1_1/norm): FrozenBatchNorm2d(num_features=160, eps=1e-05)
+              (OSA3_1_1/relu): ReLU(inplace=True)
+            )
+            (2): Sequential(
+              (OSA3_1_2/conv): Conv2d(160, 160, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA3_1_2/norm): FrozenBatchNorm2d(num_features=160, eps=1e-05)
+              (OSA3_1_2/relu): ReLU(inplace=True)
+            )
+            (3): Sequential(
+              (OSA3_1_3/conv): Conv2d(160, 160, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA3_1_3/norm): FrozenBatchNorm2d(num_features=160, eps=1e-05)
+              (OSA3_1_3/relu): ReLU(inplace=True)
+            )
+            (4): Sequential(
+              (OSA3_1_4/conv): Conv2d(160, 160, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA3_1_4/norm): FrozenBatchNorm2d(num_features=160, eps=1e-05)
+              (OSA3_1_4/relu): ReLU(inplace=True)
+            )
+          )
+          (concat): Sequential(
+            (OSA3_1_concat/conv): Conv2d(1056, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (OSA3_1_concat/norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+            (OSA3_1_concat/relu): ReLU(inplace=True)
+          )
+          (ese): eSEModule(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (fc): Conv2d(512, 512, kernel_size=(1, 1), stride=(1, 1))
+            (hsigmoid): Hsigmoid()
+          )
+        )
+      )
+      (stage4): _OSA_stage(
+        (Pooling): MaxPool2d(kernel_size=3, stride=2, padding=0, dilation=1, ceil_mode=True)
+        (OSA4_1): _OSA_module(
+          (layers): ModuleList(
+            (0): Sequential(
+              (OSA4_1_0/conv): Conv2d(512, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA4_1_0/norm): FrozenBatchNorm2d(num_features=192, eps=1e-05)
+              (OSA4_1_0/relu): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (OSA4_1_1/conv): Conv2d(192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA4_1_1/norm): FrozenBatchNorm2d(num_features=192, eps=1e-05)
+              (OSA4_1_1/relu): ReLU(inplace=True)
+            )
+            (2): Sequential(
+              (OSA4_1_2/conv): Conv2d(192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA4_1_2/norm): FrozenBatchNorm2d(num_features=192, eps=1e-05)
+              (OSA4_1_2/relu): ReLU(inplace=True)
+            )
+            (3): Sequential(
+              (OSA4_1_3/conv): Conv2d(192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA4_1_3/norm): FrozenBatchNorm2d(num_features=192, eps=1e-05)
+              (OSA4_1_3/relu): ReLU(inplace=True)
+            )
+            (4): Sequential(
+              (OSA4_1_4/conv): Conv2d(192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA4_1_4/norm): FrozenBatchNorm2d(num_features=192, eps=1e-05)
+              (OSA4_1_4/relu): ReLU(inplace=True)
+            )
+          )
+          (concat): Sequential(
+            (OSA4_1_concat/conv): Conv2d(1472, 768, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (OSA4_1_concat/norm): FrozenBatchNorm2d(num_features=768, eps=1e-05)
+            (OSA4_1_concat/relu): ReLU(inplace=True)
+          )
+          (ese): eSEModule(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (fc): Conv2d(768, 768, kernel_size=(1, 1), stride=(1, 1))
+            (hsigmoid): Hsigmoid()
+          )
+        )
+        (OSA4_2): _OSA_module(
+          (layers): ModuleList(
+            (0): Sequential(
+              (OSA4_2_0/conv): Conv2d(768, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA4_2_0/norm): FrozenBatchNorm2d(num_features=192, eps=1e-05)
+              (OSA4_2_0/relu): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (OSA4_2_1/conv): Conv2d(192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA4_2_1/norm): FrozenBatchNorm2d(num_features=192, eps=1e-05)
+              (OSA4_2_1/relu): ReLU(inplace=True)
+            )
+            (2): Sequential(
+              (OSA4_2_2/conv): Conv2d(192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA4_2_2/norm): FrozenBatchNorm2d(num_features=192, eps=1e-05)
+              (OSA4_2_2/relu): ReLU(inplace=True)
+            )
+            (3): Sequential(
+              (OSA4_2_3/conv): Conv2d(192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA4_2_3/norm): FrozenBatchNorm2d(num_features=192, eps=1e-05)
+              (OSA4_2_3/relu): ReLU(inplace=True)
+            )
+            (4): Sequential(
+              (OSA4_2_4/conv): Conv2d(192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA4_2_4/norm): FrozenBatchNorm2d(num_features=192, eps=1e-05)
+              (OSA4_2_4/relu): ReLU(inplace=True)
+            )
+          )
+          (concat): Sequential(
+            (OSA4_2_concat/conv): Conv2d(1728, 768, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (OSA4_2_concat/norm): FrozenBatchNorm2d(num_features=768, eps=1e-05)
+            (OSA4_2_concat/relu): ReLU(inplace=True)
+          )
+          (ese): eSEModule(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (fc): Conv2d(768, 768, kernel_size=(1, 1), stride=(1, 1))
+            (hsigmoid): Hsigmoid()
+          )
+        )
+      )
+      (stage5): _OSA_stage(
+        (Pooling): MaxPool2d(kernel_size=3, stride=2, padding=0, dilation=1, ceil_mode=True)
+        (OSA5_1): _OSA_module(
+          (layers): ModuleList(
+            (0): Sequential(
+              (OSA5_1_0/conv): Conv2d(768, 224, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA5_1_0/norm): FrozenBatchNorm2d(num_features=224, eps=1e-05)
+              (OSA5_1_0/relu): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (OSA5_1_1/conv): Conv2d(224, 224, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA5_1_1/norm): FrozenBatchNorm2d(num_features=224, eps=1e-05)
+              (OSA5_1_1/relu): ReLU(inplace=True)
+            )
+            (2): Sequential(
+              (OSA5_1_2/conv): Conv2d(224, 224, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA5_1_2/norm): FrozenBatchNorm2d(num_features=224, eps=1e-05)
+              (OSA5_1_2/relu): ReLU(inplace=True)
+            )
+            (3): Sequential(
+              (OSA5_1_3/conv): Conv2d(224, 224, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA5_1_3/norm): FrozenBatchNorm2d(num_features=224, eps=1e-05)
+              (OSA5_1_3/relu): ReLU(inplace=True)
+            )
+            (4): Sequential(
+              (OSA5_1_4/conv): Conv2d(224, 224, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA5_1_4/norm): FrozenBatchNorm2d(num_features=224, eps=1e-05)
+              (OSA5_1_4/relu): ReLU(inplace=True)
+            )
+          )
+          (concat): Sequential(
+            (OSA5_1_concat/conv): Conv2d(1888, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (OSA5_1_concat/norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+            (OSA5_1_concat/relu): ReLU(inplace=True)
+          )
+          (ese): eSEModule(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (fc): Conv2d(1024, 1024, kernel_size=(1, 1), stride=(1, 1))
+            (hsigmoid): Hsigmoid()
+          )
+        )
+        (OSA5_2): _OSA_module(
+          (layers): ModuleList(
+            (0): Sequential(
+              (OSA5_2_0/conv): Conv2d(1024, 224, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA5_2_0/norm): FrozenBatchNorm2d(num_features=224, eps=1e-05)
+              (OSA5_2_0/relu): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (OSA5_2_1/conv): Conv2d(224, 224, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA5_2_1/norm): FrozenBatchNorm2d(num_features=224, eps=1e-05)
+              (OSA5_2_1/relu): ReLU(inplace=True)
+            )
+            (2): Sequential(
+              (OSA5_2_2/conv): Conv2d(224, 224, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA5_2_2/norm): FrozenBatchNorm2d(num_features=224, eps=1e-05)
+              (OSA5_2_2/relu): ReLU(inplace=True)
+            )
+            (3): Sequential(
+              (OSA5_2_3/conv): Conv2d(224, 224, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA5_2_3/norm): FrozenBatchNorm2d(num_features=224, eps=1e-05)
+              (OSA5_2_3/relu): ReLU(inplace=True)
+            )
+            (4): Sequential(
+              (OSA5_2_4/conv): Conv2d(224, 224, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA5_2_4/norm): FrozenBatchNorm2d(num_features=224, eps=1e-05)
+              (OSA5_2_4/relu): ReLU(inplace=True)
+            )
+          )
+          (concat): Sequential(
+            (OSA5_2_concat/conv): Conv2d(2144, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (OSA5_2_concat/norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+            (OSA5_2_concat/relu): ReLU(inplace=True)
+          )
+          (ese): eSEModule(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (fc): Conv2d(1024, 1024, kernel_size=(1, 1), stride=(1, 1))
+            (hsigmoid): Hsigmoid()
+          )
+        )
+      )
+    )
+  )
+  (proposal_generator): RPN(
+    (rpn_head): StandardRPNHead(
+      (conv): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (objectness_logits): Conv2d(256, 3, kernel_size=(1, 1), stride=(1, 1))
+      (anchor_deltas): Conv2d(256, 12, kernel_size=(1, 1), stride=(1, 1))
+    )
+    (anchor_generator): DefaultAnchorGenerator(
+      (cell_anchors): BufferList()
+    )
+  )
+  (roi_heads): StandardROIHeads(
+    (box_pooler): ROIPooler(
+      (level_poolers): ModuleList(
+        (0): ROIAlign(output_size=(7, 7), spatial_scale=0.25, sampling_ratio=0, aligned=True)
+        (1): ROIAlign(output_size=(7, 7), spatial_scale=0.125, sampling_ratio=0, aligned=True)
+        (2): ROIAlign(output_size=(7, 7), spatial_scale=0.0625, sampling_ratio=0, aligned=True)
+        (3): ROIAlign(output_size=(7, 7), spatial_scale=0.03125, sampling_ratio=0, aligned=True)
+      )
+    )
+    (box_head): FastRCNNConvFCHead(
+      (fc1): Linear(in_features=12544, out_features=1024, bias=True)
+      (fc2): Linear(in_features=1024, out_features=1024, bias=True)
+    )
+    (box_predictor): FastRCNNOutputLayers(
+      (cls_score): Linear(in_features=1024, out_features=81, bias=True)
+      (bbox_pred): Linear(in_features=1024, out_features=320, bias=True)
+    )
+    (mask_pooler): ROIPooler(
+      (level_poolers): ModuleList(
+        (0): ROIAlign(output_size=(14, 14), spatial_scale=0.25, sampling_ratio=0, aligned=True)
+        (1): ROIAlign(output_size=(14, 14), spatial_scale=0.125, sampling_ratio=0, aligned=True)
+        (2): ROIAlign(output_size=(14, 14), spatial_scale=0.0625, sampling_ratio=0, aligned=True)
+        (3): ROIAlign(output_size=(14, 14), spatial_scale=0.03125, sampling_ratio=0, aligned=True)
+      )
+    )
+    (mask_head): MaskRCNNConvUpsampleHead(
+      (mask_fcn1): Conv2d(
+        256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)
+        (activation): ReLU()
+      )
+      (mask_fcn2): Conv2d(
+        256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)
+        (activation): ReLU()
+      )
+      (mask_fcn3): Conv2d(
+        256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)
+        (activation): ReLU()
+      )
+      (mask_fcn4): Conv2d(
+        256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)
+        (activation): ReLU()
+      )
+      (deconv): ConvTranspose2d(256, 256, kernel_size=(2, 2), stride=(2, 2))
+      (deconv_relu): ReLU()
+      (predictor): Conv2d(256, 80, kernel_size=(1, 1), stride=(1, 1))
+    )
+  )
+)
+[09/29 15:25:55] d2.data.datasets.coco INFO: Loaded 16187 images in COCO format from /data/ms_data/coco_json/tjmu/train/single_14cls_filter2.json
+[09/29 15:25:57] d2.data.datasets.coco INFO: Loading /data/ms_data/coco_json/tjmu1/train/single_14cls_filter2.json takes 1.39 seconds.
+[09/29 15:25:57] d2.data.datasets.coco INFO: Loaded 19950 images in COCO format from /data/ms_data/coco_json/tjmu1/train/single_14cls_filter2.json
+[09/29 15:25:58] d2.data.datasets.coco INFO: Loading /data/ms_data/coco_json/tjmu2/train/single_14cls_filter2.json takes 1.26 seconds.
+[09/29 15:25:58] d2.data.datasets.coco INFO: Loaded 25138 images in COCO format from /data/ms_data/coco_json/tjmu2/train/single_14cls_filter2.json
+[09/29 15:26:00] d2.data.datasets.coco INFO: Loading /data/ms_data/coco_json/lg_meinian/single_14cls_filter2.json takes 1.51 seconds.
+[09/29 15:26:00] d2.data.datasets.coco INFO: Loaded 22254 images in COCO format from /data/ms_data/coco_json/lg_meinian/single_14cls_filter2.json
+[09/29 15:26:01] d2.data.build INFO: Removed 0 images with no usable annotations. 83529 images left.
+[09/29 15:26:03] d2.data.build INFO: Distribution of instances among all 14 categories:
+[36m|  category  | #instances   |  category  | #instances   |  category  | #instances   |
+|:----------:|:-------------|:----------:|:-------------|:----------:|:-------------|
+|    心包增厚    | 196          |    心包积液    | 9809         |    心包钙化    | 2302         |
+|   食管裂孔疝    | 2938         |   甲状腺结节    | 7834         | 冠状动脉钙化/支架影 | 50706        |
+|  主动脉壁间血肿   | 238          | 主动脉内膜钙化移位  | 665          |   二尖瓣钙化    | 5169         |
+|   主动脉瓣钙化   | 7851         |   纵隔结节肿块   | 27804        |    膈淋巴肿    | 1361         |
+|   腋窝淋巴肿    | 9838         |   內乳淋巴肿    | 61           |            |              |
+|   total    | 126772       |            |              |            |              |[0m
+[09/29 15:26:03] d2.data.common INFO: Serializing 83529 elements to byte tensors and concatenating them all ...
+[09/29 15:26:04] d2.data.common INFO: Serialized dataset takes 291.72 MiB
+[09/29 15:26:04] d2.data.dataset_mapper INFO: Augmentations used in training: [ResizeShortestEdge(short_edge_length=(400, 600, 800, 1000, 1200), max_size=1200, sample_style='choice'), RandomFlip(), RandomZFlip()]
+[09/29 15:26:04] d2.data.build INFO: Using training sampler TrainingSampler
+[09/29 15:26:05] fvcore.common.checkpoint INFO: Loading checkpoint from /home/xudi/.cache/torch/checkpoints/vovnet39_ese_detectron2.pth
+[09/29 15:31:06] detectron2 INFO: Rank of current process: 0. World size: 1
+[09/29 15:31:08] detectron2 INFO: Environment info:
+----------------------  ------------------------------------------------------------------------------------
+sys.platform            linux
+Python                  3.6.12 |Anaconda, Inc.| (default, Sep  8 2020, 23:10:56) [GCC 7.3.0]
+numpy                   1.19.1
+detectron2              0.2.1 @/home/wangcheng/ms-project/detectron2
+Compiler                GCC 5.4
+CUDA compiler           CUDA 10.1
+detectron2 arch flags   7.5
+DETECTRON2_ENV_MODULE   <not set>
+PyTorch                 1.6.0 @/home/wangcheng/anaconda2/envs/msconv/lib/python3.6/site-packages/torch
+PyTorch debug build     False
+GPU available           True
+GPU 0                   TITAN RTX (arch=7.5)
+CUDA_HOME               /usr/local/cuda
+Pillow                  7.2.0
+torchvision             0.7.0 @/home/wangcheng/anaconda2/envs/msconv/lib/python3.6/site-packages/torchvision
+torchvision arch flags  3.5, 5.0, 6.0, 7.0, 7.5
+fvcore                  0.1.2.post20200912
+cv2                     4.4.0
+----------------------  ------------------------------------------------------------------------------------
+PyTorch built with:
+  - GCC 7.3
+  - C++ Version: 201402
+  - Intel(R) Math Kernel Library Version 2020.0.2 Product Build 20200624 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v1.5.0 (Git Hash e2ac1fac44c5078ca927cb9b90e1b3066a0b2ed0)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - NNPACK is enabled
+  - CPU capability usage: AVX2
+  - CUDA Runtime 10.1
+  - NVCC architecture flags: -gencode;arch=compute_37,code=sm_37;-gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_61,code=sm_61;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_37,code=compute_37
+  - CuDNN 7.6.3
+  - Magma 2.5.2
+  - Build settings: BLAS=MKL, BUILD_TYPE=Release, CXX_FLAGS= -Wno-deprecated -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -fopenmp -DNDEBUG -DUSE_FBGEMM -DUSE_QNNPACK -DUSE_PYTORCH_QNNPACK -DUSE_XNNPACK -DUSE_VULKAN_WRAPPER -O2 -fPIC -Wno-narrowing -Wall -Wextra -Werror=return-type -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wno-sign-compare -Wno-unused-parameter -Wno-unused-variable -Wno-unused-function -Wno-unused-result -Wno-unused-local-typedefs -Wno-strict-overflow -Wno-strict-aliasing -Wno-error=deprecated-declarations -Wno-stringop-overflow -Wno-error=pedantic -Wno-error=redundant-decls -Wno-error=old-style-cast -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Wno-stringop-overflow, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, PERF_WITH_AVX512=1, USE_CUDA=ON, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=ON, USE_NNPACK=ON, USE_OPENMP=ON, USE_STATIC_DISPATCH=OFF, 
+
+[09/29 15:31:08] detectron2 INFO: Command line arguments: Namespace(config_file='configs/vovnet/mask_rcnn_V_39_FPN_3x.yaml', dist_url='tcp://127.0.0.1:50890', eval_only=False, machine_rank=0, num_gpus=1, num_machines=1, opts=['SOLVER.IMS_PER_BATCH', '2', 'DATALOADER.NUM_WORKERS', '1'], resume=False)
+[09/29 15:31:08] detectron2 INFO: Contents of args.config_file=configs/vovnet/mask_rcnn_V_39_FPN_3x.yaml:
+_BASE_: "../Base-RCNN-VoVNet-FPN.yaml"
+MODEL:
+  WEIGHTS: "https://www.dropbox.com/s/q98pypf96rhtd8y/vovnet39_ese_detectron2.pth?dl=1"
+  MASK_ON: True
+  VOVNET:
+    CONV_BODY : "V-39-eSE"
+SOLVER:
+  STEPS: (210000, 250000)
+  MAX_ITER: 270000
+OUTPUT_DIR: "checkpoints/MRCN-V2-39-3x"
+[09/29 15:31:08] detectron2 INFO: Running with full config:
+CUDNN_BENCHMARK: False
+DATALOADER:
+  ASPECT_RATIO_GROUPING: True
+  FILTER_EMPTY_ANNOTATIONS: True
+  NUM_WORKERS: 1
+  REPEAT_THRESHOLD: 0.0
+  SAMPLER_TRAIN: TrainingSampler
+DATASETS:
+  PRECOMPUTED_PROPOSAL_TOPK_TEST: 1000
+  PRECOMPUTED_PROPOSAL_TOPK_TRAIN: 2000
+  PROPOSAL_FILES_TEST: ()
+  PROPOSAL_FILES_TRAIN: ()
+  TEST: ('coco_test_all',)
+  TRAIN: ('coco_tjmu_14f2', 'coco_tjmu1_14f2', 'coco_tjmu2_14f2', 'coco_lgmn_14f2')
+GLOBAL:
+  HACK: 1.0
+INPUT:
+  CROP:
+    ENABLED: False
+    SIZE: [0.9, 0.9]
+    TYPE: relative_range
+  FORMAT: BGR
+  IGNORE_EMPTY: True
+  MASK_FORMAT: polygon
+  MAX_SIZE_TEST: 1333
+  MAX_SIZE_TRAIN: 1200
+  MIN_SIZE_TEST: 800
+  MIN_SIZE_TRAIN: (400, 600, 800, 1000, 1200)
+  MIN_SIZE_TRAIN_SAMPLING: choice
+  NUM_IMAGES_3DCE: 3
+  RANDOM_FLIP: horizontal
+  SLICE_NUM: 9
+MODEL:
+  ANCHOR_GENERATOR:
+    ANGLES: [[-90, 0, 90]]
+    ASPECT_RATIOS: [[0.5, 1.0, 2.0]]
+    NAME: DefaultAnchorGenerator
+    OFFSET: 0.0
+    SIZES: [[32], [64], [128], [256], [512]]
+  BACKBONE:
+    FREEZE_AT: 0
+    NAME: build_vovnet_fpn_backbone
+  DEVICE: cuda
+  FPN:
+    FUSE_TYPE: sum
+    IN_FEATURES: ['stage2', 'stage3', 'stage4', 'stage5']
+    NORM: 
+    OUT_CHANNELS: 256
+  KEYPOINT_ON: False
+  LOAD_PROPOSALS: False
+  MASK_ON: True
+  META_ARCHITECTURE: GeneralizedRCNN
+  PANOPTIC_FPN:
+    COMBINE:
+      ENABLED: True
+      INSTANCES_CONFIDENCE_THRESH: 0.5
+      OVERLAP_THRESH: 0.5
+      STUFF_AREA_LIMIT: 4096
+    INSTANCE_LOSS_WEIGHT: 1.0
+  PIXEL_MEAN: [0, 0, 0, 0, 0, 0, 0, 0, 0]
+  PIXEL_STD: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+  PROPOSAL_GENERATOR:
+    MIN_SIZE: 0
+    NAME: RPN
+  RESNETS:
+    DEFORM_MODULATED: False
+    DEFORM_NUM_GROUPS: 1
+    DEFORM_ON_PER_STAGE: [False, False, False, False]
+    DEPTH: 50
+    NORM: FrozenBN
+    NUM_GROUPS: 1
+    OUT_FEATURES: ['res4']
+    RES2_OUT_CHANNELS: 256
+    RES5_DILATION: 1
+    STEM_OUT_CHANNELS: 64
+    STRIDE_IN_1X1: True
+    WIDTH_PER_GROUP: 64
+  RETINANET:
+    BBOX_REG_LOSS_TYPE: smooth_l1
+    BBOX_REG_WEIGHTS: (1.0, 1.0, 1.0, 1.0)
+    FOCAL_LOSS_ALPHA: 0.25
+    FOCAL_LOSS_GAMMA: 2.0
+    IN_FEATURES: ['p3', 'p4', 'p5', 'p6', 'p7']
+    IOU_LABELS: [0, -1, 1]
+    IOU_THRESHOLDS: [0.4, 0.5]
+    NMS_THRESH_TEST: 0.5
+    NORM: 
+    NUM_CLASSES: 80
+    NUM_CONVS: 4
+    PRIOR_PROB: 0.01
+    SCORE_THRESH_TEST: 0.05
+    SMOOTH_L1_LOSS_BETA: 0.1
+    TOPK_CANDIDATES_TEST: 1000
+  ROI_BOX_CASCADE_HEAD:
+    BBOX_REG_WEIGHTS: ((10.0, 10.0, 5.0, 5.0), (20.0, 20.0, 10.0, 10.0), (30.0, 30.0, 15.0, 15.0))
+    IOUS: (0.5, 0.6, 0.7)
+  ROI_BOX_HEAD:
+    BBOX_REG_LOSS_TYPE: smooth_l1
+    BBOX_REG_LOSS_WEIGHT: 1.0
+    BBOX_REG_WEIGHTS: (10.0, 10.0, 5.0, 5.0)
+    CLS_AGNOSTIC_BBOX_REG: False
+    CONV_DIM: 256
+    FC_DIM: 1024
+    NAME: FastRCNNConvFCHead
+    NORM: 
+    NUM_CONV: 0
+    NUM_FC: 2
+    POOLER_RESOLUTION: 7
+    POOLER_SAMPLING_RATIO: 0
+    POOLER_TYPE: ROIAlignV2
+    SMOOTH_L1_BETA: 0.0
+    TRAIN_ON_PRED_BOXES: False
+  ROI_HEADS:
+    BATCH_SIZE_PER_IMAGE: 512
+    IN_FEATURES: ['p2', 'p3', 'p4', 'p5']
+    IOU_LABELS: [0, 1]
+    IOU_THRESHOLDS: [0.5]
+    NAME: StandardROIHeads
+    NMS_THRESH_TEST: 0.5
+    NUM_CLASSES: 80
+    POSITIVE_FRACTION: 0.25
+    PROPOSAL_APPEND_GT: True
+    SCORE_THRESH_TEST: 0.05
+  ROI_KEYPOINT_HEAD:
+    CONV_DIMS: (512, 512, 512, 512, 512, 512, 512, 512)
+    LOSS_WEIGHT: 1.0
+    MIN_KEYPOINTS_PER_IMAGE: 1
+    NAME: KRCNNConvDeconvUpsampleHead
+    NORMALIZE_LOSS_BY_VISIBLE_KEYPOINTS: True
+    NUM_KEYPOINTS: 17
+    POOLER_RESOLUTION: 14
+    POOLER_SAMPLING_RATIO: 0
+    POOLER_TYPE: ROIAlignV2
+  ROI_MASK_HEAD:
+    CLS_AGNOSTIC_MASK: False
+    CONV_DIM: 256
+    NAME: MaskRCNNConvUpsampleHead
+    NORM: 
+    NUM_CONV: 4
+    POOLER_RESOLUTION: 14
+    POOLER_SAMPLING_RATIO: 0
+    POOLER_TYPE: ROIAlignV2
+  RPN:
+    BATCH_SIZE_PER_IMAGE: 256
+    BBOX_REG_LOSS_TYPE: smooth_l1
+    BBOX_REG_LOSS_WEIGHT: 1.0
+    BBOX_REG_WEIGHTS: (1.0, 1.0, 1.0, 1.0)
+    BOUNDARY_THRESH: -1
+    HEAD_NAME: StandardRPNHead
+    IN_FEATURES: ['p2', 'p3', 'p4', 'p5', 'p6']
+    IOU_LABELS: [0, -1, 1]
+    IOU_THRESHOLDS: [0.3, 0.7]
+    LOSS_WEIGHT: 1.0
+    NMS_THRESH: 0.7
+    POSITIVE_FRACTION: 0.5
+    POST_NMS_TOPK_TEST: 1000
+    POST_NMS_TOPK_TRAIN: 1000
+    PRE_NMS_TOPK_TEST: 1000
+    PRE_NMS_TOPK_TRAIN: 2000
+    SMOOTH_L1_BETA: 0.0
+  SEM_SEG_HEAD:
+    COMMON_STRIDE: 4
+    CONVS_DIM: 128
+    IGNORE_VALUE: 255
+    IN_FEATURES: ['p2', 'p3', 'p4', 'p5']
+    LOSS_WEIGHT: 1.0
+    NAME: SemSegFPNHead
+    NORM: GN
+    NUM_CLASSES: 54
+  VOVNET:
+    BACKBONE_OUT_CHANNELS: 256
+    CONV_BODY: V-39-eSE
+    NORM: FrozenBN
+    OUT_CHANNELS: 256
+    OUT_FEATURES: ['stage2', 'stage3', 'stage4', 'stage5']
+  WEIGHTS: https://www.dropbox.com/s/q98pypf96rhtd8y/vovnet39_ese_detectron2.pth?dl=1
+OUTPUT_DIR: checkpoints/MRCN-V2-39-3x
+SEED: -1
+SOLVER:
+  BASE_LR: 0.02
+  BIAS_LR_FACTOR: 1.0
+  CHECKPOINT_PERIOD: 5000
+  CLIP_GRADIENTS:
+    CLIP_TYPE: value
+    CLIP_VALUE: 1.0
+    ENABLED: False
+    NORM_TYPE: 2.0
+  GAMMA: 0.1
+  IMS_PER_BATCH: 2
+  LR_SCHEDULER_NAME: WarmupMultiStepLR
+  MAX_ITER: 270000
+  MOMENTUM: 0.9
+  NESTEROV: False
+  REFERENCE_WORLD_SIZE: 0
+  STEPS: (210000, 250000)
+  WARMUP_FACTOR: 0.001
+  WARMUP_ITERS: 1000
+  WARMUP_METHOD: linear
+  WEIGHT_DECAY: 0.0001
+  WEIGHT_DECAY_BIAS: 0.0001
+  WEIGHT_DECAY_NORM: 0.0
+TEST:
+  AUG:
+    ENABLED: False
+    FLIP: True
+    MAX_SIZE: 4000
+    MIN_SIZES: (400, 500, 600, 700, 800, 900, 1000, 1100, 1200)
+  DETECTIONS_PER_IMAGE: 100
+  EVAL_PERIOD: 0
+  EXPECTED_RESULTS: []
+  KEYPOINT_OKS_SIGMAS: []
+  PRECISE_BN:
+    ENABLED: False
+    NUM_ITER: 200
+VERSION: 2
+VIS_PERIOD: 0
+[09/29 15:31:08] detectron2 INFO: Full config saved to checkpoints/MRCN-V2-39-3x/config.yaml
+[09/29 15:31:08] d2.utils.env INFO: Using a generated random seed 9001713
+[09/29 15:31:36] d2.engine.defaults INFO: Model:
+GeneralizedRCNN(
+  (backbone): FPN(
+    (fpn_lateral2): Conv2d(256, 256, kernel_size=(1, 1), stride=(1, 1))
+    (fpn_output2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (fpn_lateral3): Conv2d(512, 256, kernel_size=(1, 1), stride=(1, 1))
+    (fpn_output3): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (fpn_lateral4): Conv2d(768, 256, kernel_size=(1, 1), stride=(1, 1))
+    (fpn_output4): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (fpn_lateral5): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1))
+    (fpn_output5): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (top_block): LastLevelMaxPool()
+    (bottom_up): VoVNet(
+      (stem): Sequential(
+        (stem_1/conv): Conv2d(9, 64, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+        (stem_1/norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+        (stem_1/relu): ReLU(inplace=True)
+        (stem_2/conv): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        (stem_2/norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+        (stem_2/relu): ReLU(inplace=True)
+        (stem_3/conv): Conv2d(64, 128, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+        (stem_3/norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+        (stem_3/relu): ReLU(inplace=True)
+      )
+      (stage2): _OSA_stage(
+        (OSA2_1): _OSA_module(
+          (layers): ModuleList(
+            (0): Sequential(
+              (OSA2_1_0/conv): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA2_1_0/norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+              (OSA2_1_0/relu): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (OSA2_1_1/conv): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA2_1_1/norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+              (OSA2_1_1/relu): ReLU(inplace=True)
+            )
+            (2): Sequential(
+              (OSA2_1_2/conv): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA2_1_2/norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+              (OSA2_1_2/relu): ReLU(inplace=True)
+            )
+            (3): Sequential(
+              (OSA2_1_3/conv): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA2_1_3/norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+              (OSA2_1_3/relu): ReLU(inplace=True)
+            )
+            (4): Sequential(
+              (OSA2_1_4/conv): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA2_1_4/norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+              (OSA2_1_4/relu): ReLU(inplace=True)
+            )
+          )
+          (concat): Sequential(
+            (OSA2_1_concat/conv): Conv2d(768, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (OSA2_1_concat/norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            (OSA2_1_concat/relu): ReLU(inplace=True)
+          )
+          (ese): eSEModule(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (fc): Conv2d(256, 256, kernel_size=(1, 1), stride=(1, 1))
+            (hsigmoid): Hsigmoid()
+          )
+        )
+      )
+      (stage3): _OSA_stage(
+        (Pooling): MaxPool2d(kernel_size=3, stride=2, padding=0, dilation=1, ceil_mode=True)
+        (OSA3_1): _OSA_module(
+          (layers): ModuleList(
+            (0): Sequential(
+              (OSA3_1_0/conv): Conv2d(256, 160, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA3_1_0/norm): FrozenBatchNorm2d(num_features=160, eps=1e-05)
+              (OSA3_1_0/relu): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (OSA3_1_1/conv): Conv2d(160, 160, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA3_1_1/norm): FrozenBatchNorm2d(num_features=160, eps=1e-05)
+              (OSA3_1_1/relu): ReLU(inplace=True)
+            )
+            (2): Sequential(
+              (OSA3_1_2/conv): Conv2d(160, 160, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA3_1_2/norm): FrozenBatchNorm2d(num_features=160, eps=1e-05)
+              (OSA3_1_2/relu): ReLU(inplace=True)
+            )
+            (3): Sequential(
+              (OSA3_1_3/conv): Conv2d(160, 160, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA3_1_3/norm): FrozenBatchNorm2d(num_features=160, eps=1e-05)
+              (OSA3_1_3/relu): ReLU(inplace=True)
+            )
+            (4): Sequential(
+              (OSA3_1_4/conv): Conv2d(160, 160, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA3_1_4/norm): FrozenBatchNorm2d(num_features=160, eps=1e-05)
+              (OSA3_1_4/relu): ReLU(inplace=True)
+            )
+          )
+          (concat): Sequential(
+            (OSA3_1_concat/conv): Conv2d(1056, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (OSA3_1_concat/norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+            (OSA3_1_concat/relu): ReLU(inplace=True)
+          )
+          (ese): eSEModule(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (fc): Conv2d(512, 512, kernel_size=(1, 1), stride=(1, 1))
+            (hsigmoid): Hsigmoid()
+          )
+        )
+      )
+      (stage4): _OSA_stage(
+        (Pooling): MaxPool2d(kernel_size=3, stride=2, padding=0, dilation=1, ceil_mode=True)
+        (OSA4_1): _OSA_module(
+          (layers): ModuleList(
+            (0): Sequential(
+              (OSA4_1_0/conv): Conv2d(512, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA4_1_0/norm): FrozenBatchNorm2d(num_features=192, eps=1e-05)
+              (OSA4_1_0/relu): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (OSA4_1_1/conv): Conv2d(192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA4_1_1/norm): FrozenBatchNorm2d(num_features=192, eps=1e-05)
+              (OSA4_1_1/relu): ReLU(inplace=True)
+            )
+            (2): Sequential(
+              (OSA4_1_2/conv): Conv2d(192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA4_1_2/norm): FrozenBatchNorm2d(num_features=192, eps=1e-05)
+              (OSA4_1_2/relu): ReLU(inplace=True)
+            )
+            (3): Sequential(
+              (OSA4_1_3/conv): Conv2d(192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA4_1_3/norm): FrozenBatchNorm2d(num_features=192, eps=1e-05)
+              (OSA4_1_3/relu): ReLU(inplace=True)
+            )
+            (4): Sequential(
+              (OSA4_1_4/conv): Conv2d(192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA4_1_4/norm): FrozenBatchNorm2d(num_features=192, eps=1e-05)
+              (OSA4_1_4/relu): ReLU(inplace=True)
+            )
+          )
+          (concat): Sequential(
+            (OSA4_1_concat/conv): Conv2d(1472, 768, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (OSA4_1_concat/norm): FrozenBatchNorm2d(num_features=768, eps=1e-05)
+            (OSA4_1_concat/relu): ReLU(inplace=True)
+          )
+          (ese): eSEModule(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (fc): Conv2d(768, 768, kernel_size=(1, 1), stride=(1, 1))
+            (hsigmoid): Hsigmoid()
+          )
+        )
+        (OSA4_2): _OSA_module(
+          (layers): ModuleList(
+            (0): Sequential(
+              (OSA4_2_0/conv): Conv2d(768, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA4_2_0/norm): FrozenBatchNorm2d(num_features=192, eps=1e-05)
+              (OSA4_2_0/relu): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (OSA4_2_1/conv): Conv2d(192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA4_2_1/norm): FrozenBatchNorm2d(num_features=192, eps=1e-05)
+              (OSA4_2_1/relu): ReLU(inplace=True)
+            )
+            (2): Sequential(
+              (OSA4_2_2/conv): Conv2d(192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA4_2_2/norm): FrozenBatchNorm2d(num_features=192, eps=1e-05)
+              (OSA4_2_2/relu): ReLU(inplace=True)
+            )
+            (3): Sequential(
+              (OSA4_2_3/conv): Conv2d(192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA4_2_3/norm): FrozenBatchNorm2d(num_features=192, eps=1e-05)
+              (OSA4_2_3/relu): ReLU(inplace=True)
+            )
+            (4): Sequential(
+              (OSA4_2_4/conv): Conv2d(192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA4_2_4/norm): FrozenBatchNorm2d(num_features=192, eps=1e-05)
+              (OSA4_2_4/relu): ReLU(inplace=True)
+            )
+          )
+          (concat): Sequential(
+            (OSA4_2_concat/conv): Conv2d(1728, 768, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (OSA4_2_concat/norm): FrozenBatchNorm2d(num_features=768, eps=1e-05)
+            (OSA4_2_concat/relu): ReLU(inplace=True)
+          )
+          (ese): eSEModule(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (fc): Conv2d(768, 768, kernel_size=(1, 1), stride=(1, 1))
+            (hsigmoid): Hsigmoid()
+          )
+        )
+      )
+      (stage5): _OSA_stage(
+        (Pooling): MaxPool2d(kernel_size=3, stride=2, padding=0, dilation=1, ceil_mode=True)
+        (OSA5_1): _OSA_module(
+          (layers): ModuleList(
+            (0): Sequential(
+              (OSA5_1_0/conv): Conv2d(768, 224, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA5_1_0/norm): FrozenBatchNorm2d(num_features=224, eps=1e-05)
+              (OSA5_1_0/relu): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (OSA5_1_1/conv): Conv2d(224, 224, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA5_1_1/norm): FrozenBatchNorm2d(num_features=224, eps=1e-05)
+              (OSA5_1_1/relu): ReLU(inplace=True)
+            )
+            (2): Sequential(
+              (OSA5_1_2/conv): Conv2d(224, 224, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA5_1_2/norm): FrozenBatchNorm2d(num_features=224, eps=1e-05)
+              (OSA5_1_2/relu): ReLU(inplace=True)
+            )
+            (3): Sequential(
+              (OSA5_1_3/conv): Conv2d(224, 224, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA5_1_3/norm): FrozenBatchNorm2d(num_features=224, eps=1e-05)
+              (OSA5_1_3/relu): ReLU(inplace=True)
+            )
+            (4): Sequential(
+              (OSA5_1_4/conv): Conv2d(224, 224, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA5_1_4/norm): FrozenBatchNorm2d(num_features=224, eps=1e-05)
+              (OSA5_1_4/relu): ReLU(inplace=True)
+            )
+          )
+          (concat): Sequential(
+            (OSA5_1_concat/conv): Conv2d(1888, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (OSA5_1_concat/norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+            (OSA5_1_concat/relu): ReLU(inplace=True)
+          )
+          (ese): eSEModule(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (fc): Conv2d(1024, 1024, kernel_size=(1, 1), stride=(1, 1))
+            (hsigmoid): Hsigmoid()
+          )
+        )
+        (OSA5_2): _OSA_module(
+          (layers): ModuleList(
+            (0): Sequential(
+              (OSA5_2_0/conv): Conv2d(1024, 224, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA5_2_0/norm): FrozenBatchNorm2d(num_features=224, eps=1e-05)
+              (OSA5_2_0/relu): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (OSA5_2_1/conv): Conv2d(224, 224, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA5_2_1/norm): FrozenBatchNorm2d(num_features=224, eps=1e-05)
+              (OSA5_2_1/relu): ReLU(inplace=True)
+            )
+            (2): Sequential(
+              (OSA5_2_2/conv): Conv2d(224, 224, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA5_2_2/norm): FrozenBatchNorm2d(num_features=224, eps=1e-05)
+              (OSA5_2_2/relu): ReLU(inplace=True)
+            )
+            (3): Sequential(
+              (OSA5_2_3/conv): Conv2d(224, 224, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA5_2_3/norm): FrozenBatchNorm2d(num_features=224, eps=1e-05)
+              (OSA5_2_3/relu): ReLU(inplace=True)
+            )
+            (4): Sequential(
+              (OSA5_2_4/conv): Conv2d(224, 224, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA5_2_4/norm): FrozenBatchNorm2d(num_features=224, eps=1e-05)
+              (OSA5_2_4/relu): ReLU(inplace=True)
+            )
+          )
+          (concat): Sequential(
+            (OSA5_2_concat/conv): Conv2d(2144, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (OSA5_2_concat/norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+            (OSA5_2_concat/relu): ReLU(inplace=True)
+          )
+          (ese): eSEModule(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (fc): Conv2d(1024, 1024, kernel_size=(1, 1), stride=(1, 1))
+            (hsigmoid): Hsigmoid()
+          )
+        )
+      )
+    )
+  )
+  (proposal_generator): RPN(
+    (rpn_head): StandardRPNHead(
+      (conv): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (objectness_logits): Conv2d(256, 3, kernel_size=(1, 1), stride=(1, 1))
+      (anchor_deltas): Conv2d(256, 12, kernel_size=(1, 1), stride=(1, 1))
+    )
+    (anchor_generator): DefaultAnchorGenerator(
+      (cell_anchors): BufferList()
+    )
+  )
+  (roi_heads): StandardROIHeads(
+    (box_pooler): ROIPooler(
+      (level_poolers): ModuleList(
+        (0): ROIAlign(output_size=(7, 7), spatial_scale=0.25, sampling_ratio=0, aligned=True)
+        (1): ROIAlign(output_size=(7, 7), spatial_scale=0.125, sampling_ratio=0, aligned=True)
+        (2): ROIAlign(output_size=(7, 7), spatial_scale=0.0625, sampling_ratio=0, aligned=True)
+        (3): ROIAlign(output_size=(7, 7), spatial_scale=0.03125, sampling_ratio=0, aligned=True)
+      )
+    )
+    (box_head): FastRCNNConvFCHead(
+      (fc1): Linear(in_features=12544, out_features=1024, bias=True)
+      (fc2): Linear(in_features=1024, out_features=1024, bias=True)
+    )
+    (box_predictor): FastRCNNOutputLayers(
+      (cls_score): Linear(in_features=1024, out_features=81, bias=True)
+      (bbox_pred): Linear(in_features=1024, out_features=320, bias=True)
+    )
+    (mask_pooler): ROIPooler(
+      (level_poolers): ModuleList(
+        (0): ROIAlign(output_size=(14, 14), spatial_scale=0.25, sampling_ratio=0, aligned=True)
+        (1): ROIAlign(output_size=(14, 14), spatial_scale=0.125, sampling_ratio=0, aligned=True)
+        (2): ROIAlign(output_size=(14, 14), spatial_scale=0.0625, sampling_ratio=0, aligned=True)
+        (3): ROIAlign(output_size=(14, 14), spatial_scale=0.03125, sampling_ratio=0, aligned=True)
+      )
+    )
+    (mask_head): MaskRCNNConvUpsampleHead(
+      (mask_fcn1): Conv2d(
+        256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)
+        (activation): ReLU()
+      )
+      (mask_fcn2): Conv2d(
+        256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)
+        (activation): ReLU()
+      )
+      (mask_fcn3): Conv2d(
+        256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)
+        (activation): ReLU()
+      )
+      (mask_fcn4): Conv2d(
+        256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)
+        (activation): ReLU()
+      )
+      (deconv): ConvTranspose2d(256, 256, kernel_size=(2, 2), stride=(2, 2))
+      (deconv_relu): ReLU()
+      (predictor): Conv2d(256, 80, kernel_size=(1, 1), stride=(1, 1))
+    )
+  )
+)
+[09/29 15:31:36] d2.data.datasets.coco INFO: Loaded 16187 images in COCO format from /data/ms_data/coco_json/tjmu/train/single_14cls_filter2.json
+[09/29 15:31:38] d2.data.datasets.coco INFO: Loading /data/ms_data/coco_json/tjmu1/train/single_14cls_filter2.json takes 1.45 seconds.
+[09/29 15:31:38] d2.data.datasets.coco INFO: Loaded 19950 images in COCO format from /data/ms_data/coco_json/tjmu1/train/single_14cls_filter2.json
+[09/29 15:31:40] d2.data.datasets.coco INFO: Loading /data/ms_data/coco_json/tjmu2/train/single_14cls_filter2.json takes 1.26 seconds.
+[09/29 15:31:40] d2.data.datasets.coco INFO: Loaded 25138 images in COCO format from /data/ms_data/coco_json/tjmu2/train/single_14cls_filter2.json
+[09/29 15:31:42] d2.data.datasets.coco INFO: Loading /data/ms_data/coco_json/lg_meinian/single_14cls_filter2.json takes 1.49 seconds.
+[09/29 15:31:42] d2.data.datasets.coco INFO: Loaded 22254 images in COCO format from /data/ms_data/coco_json/lg_meinian/single_14cls_filter2.json
+[09/29 15:31:42] d2.data.build INFO: Removed 0 images with no usable annotations. 83529 images left.
+[09/29 15:31:44] d2.data.build INFO: Distribution of instances among all 14 categories:
+[36m|  category  | #instances   |  category  | #instances   |  category  | #instances   |
+|:----------:|:-------------|:----------:|:-------------|:----------:|:-------------|
+|    心包增厚    | 196          |    心包积液    | 9809         |    心包钙化    | 2302         |
+|   食管裂孔疝    | 2938         |   甲状腺结节    | 7834         | 冠状动脉钙化/支架影 | 50706        |
+|  主动脉壁间血肿   | 238          | 主动脉内膜钙化移位  | 665          |   二尖瓣钙化    | 5169         |
+|   主动脉瓣钙化   | 7851         |   纵隔结节肿块   | 27804        |    膈淋巴肿    | 1361         |
+|   腋窝淋巴肿    | 9838         |   內乳淋巴肿    | 61           |            |              |
+|   total    | 126772       |            |              |            |              |[0m
+[09/29 15:31:44] d2.data.common INFO: Serializing 83529 elements to byte tensors and concatenating them all ...
+[09/29 15:31:46] d2.data.common INFO: Serialized dataset takes 291.72 MiB
+[09/29 15:31:46] d2.data.dataset_mapper INFO: Augmentations used in training: [ResizeShortestEdge(short_edge_length=(400, 600, 800, 1000, 1200), max_size=1200, sample_style='choice'), RandomFlip(), RandomZFlip()]
+[09/29 15:31:46] d2.data.build INFO: Using training sampler TrainingSampler
+[09/29 15:31:46] fvcore.common.checkpoint INFO: Loading checkpoint from https://www.dropbox.com/s/q98pypf96rhtd8y/vovnet39_ese_detectron2.pth?dl=1
+[09/29 15:31:46] fvcore.common.file_io INFO: Downloading https://www.dropbox.com/s/q98pypf96rhtd8y/vovnet39_ese_detectron2.pth?dl=1 ...
+[09/29 15:31:46] fvcore.common.download INFO: Downloading from https://www.dropbox.com/s/q98pypf96rhtd8y/vovnet39_ese_detectron2.pth?dl=1 ...
+[09/29 15:37:27] detectron2 INFO: Rank of current process: 0. World size: 1
+[09/29 15:37:37] detectron2 INFO: Environment info:
+----------------------  ------------------------------------------------------------------------------------
+sys.platform            linux
+Python                  3.6.12 |Anaconda, Inc.| (default, Sep  8 2020, 23:10:56) [GCC 7.3.0]
+numpy                   1.19.1
+detectron2              0.2.1 @/home/wangcheng/ms-project/detectron2
+Compiler                GCC 5.4
+CUDA compiler           CUDA 10.1
+detectron2 arch flags   7.5
+DETECTRON2_ENV_MODULE   <not set>
+PyTorch                 1.6.0 @/home/wangcheng/anaconda2/envs/msconv/lib/python3.6/site-packages/torch
+PyTorch debug build     False
+GPU available           True
+GPU 0                   TITAN RTX (arch=7.5)
+CUDA_HOME               /usr/local/cuda
+Pillow                  7.2.0
+torchvision             0.7.0 @/home/wangcheng/anaconda2/envs/msconv/lib/python3.6/site-packages/torchvision
+torchvision arch flags  3.5, 5.0, 6.0, 7.0, 7.5
+fvcore                  0.1.2.post20200912
+cv2                     4.4.0
+----------------------  ------------------------------------------------------------------------------------
+PyTorch built with:
+  - GCC 7.3
+  - C++ Version: 201402
+  - Intel(R) Math Kernel Library Version 2020.0.2 Product Build 20200624 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v1.5.0 (Git Hash e2ac1fac44c5078ca927cb9b90e1b3066a0b2ed0)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - NNPACK is enabled
+  - CPU capability usage: AVX2
+  - CUDA Runtime 10.1
+  - NVCC architecture flags: -gencode;arch=compute_37,code=sm_37;-gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_61,code=sm_61;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_37,code=compute_37
+  - CuDNN 7.6.3
+  - Magma 2.5.2
+  - Build settings: BLAS=MKL, BUILD_TYPE=Release, CXX_FLAGS= -Wno-deprecated -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -fopenmp -DNDEBUG -DUSE_FBGEMM -DUSE_QNNPACK -DUSE_PYTORCH_QNNPACK -DUSE_XNNPACK -DUSE_VULKAN_WRAPPER -O2 -fPIC -Wno-narrowing -Wall -Wextra -Werror=return-type -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wno-sign-compare -Wno-unused-parameter -Wno-unused-variable -Wno-unused-function -Wno-unused-result -Wno-unused-local-typedefs -Wno-strict-overflow -Wno-strict-aliasing -Wno-error=deprecated-declarations -Wno-stringop-overflow -Wno-error=pedantic -Wno-error=redundant-decls -Wno-error=old-style-cast -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Wno-stringop-overflow, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, PERF_WITH_AVX512=1, USE_CUDA=ON, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=ON, USE_NNPACK=ON, USE_OPENMP=ON, USE_STATIC_DISPATCH=OFF, 
+
+[09/29 15:37:37] detectron2 INFO: Command line arguments: Namespace(config_file='configs/vovnet/mask_rcnn_V_39_FPN_3x.yaml', dist_url='tcp://127.0.0.1:50890', eval_only=False, machine_rank=0, num_gpus=1, num_machines=1, opts=['SOLVER.IMS_PER_BATCH', '2', 'DATALOADER.NUM_WORKERS', '1'], resume=False)
+[09/29 15:37:37] detectron2 INFO: Contents of args.config_file=configs/vovnet/mask_rcnn_V_39_FPN_3x.yaml:
+_BASE_: "../Base-RCNN-VoVNet-FPN.yaml"
+MODEL:
+  WEIGHTS: "/home/wangcheng/ms-project/checkpoints/MRCN-V2-39-3x/vovnet39_ese_detectron2.pth"
+  MASK_ON: True
+  VOVNET:
+    CONV_BODY : "V-39-eSE"
+SOLVER:
+  STEPS: (210000, 250000)
+  MAX_ITER: 270000
+OUTPUT_DIR: "checkpoints/MRCN-V2-39-3x"
+[09/29 15:37:37] detectron2 INFO: Running with full config:
+CUDNN_BENCHMARK: False
+DATALOADER:
+  ASPECT_RATIO_GROUPING: True
+  FILTER_EMPTY_ANNOTATIONS: True
+  NUM_WORKERS: 1
+  REPEAT_THRESHOLD: 0.0
+  SAMPLER_TRAIN: TrainingSampler
+DATASETS:
+  PRECOMPUTED_PROPOSAL_TOPK_TEST: 1000
+  PRECOMPUTED_PROPOSAL_TOPK_TRAIN: 2000
+  PROPOSAL_FILES_TEST: ()
+  PROPOSAL_FILES_TRAIN: ()
+  TEST: ('coco_test_all',)
+  TRAIN: ('coco_tjmu_14f2', 'coco_tjmu1_14f2', 'coco_tjmu2_14f2', 'coco_lgmn_14f2')
+GLOBAL:
+  HACK: 1.0
+INPUT:
+  CROP:
+    ENABLED: False
+    SIZE: [0.9, 0.9]
+    TYPE: relative_range
+  FORMAT: BGR
+  IGNORE_EMPTY: True
+  MASK_FORMAT: polygon
+  MAX_SIZE_TEST: 1333
+  MAX_SIZE_TRAIN: 1200
+  MIN_SIZE_TEST: 800
+  MIN_SIZE_TRAIN: (400, 600, 800, 1000, 1200)
+  MIN_SIZE_TRAIN_SAMPLING: choice
+  NUM_IMAGES_3DCE: 3
+  RANDOM_FLIP: horizontal
+  SLICE_NUM: 9
+MODEL:
+  ANCHOR_GENERATOR:
+    ANGLES: [[-90, 0, 90]]
+    ASPECT_RATIOS: [[0.5, 1.0, 2.0]]
+    NAME: DefaultAnchorGenerator
+    OFFSET: 0.0
+    SIZES: [[32], [64], [128], [256], [512]]
+  BACKBONE:
+    FREEZE_AT: 0
+    NAME: build_vovnet_fpn_backbone
+  DEVICE: cuda
+  FPN:
+    FUSE_TYPE: sum
+    IN_FEATURES: ['stage2', 'stage3', 'stage4', 'stage5']
+    NORM: 
+    OUT_CHANNELS: 256
+  KEYPOINT_ON: False
+  LOAD_PROPOSALS: False
+  MASK_ON: True
+  META_ARCHITECTURE: GeneralizedRCNN
+  PANOPTIC_FPN:
+    COMBINE:
+      ENABLED: True
+      INSTANCES_CONFIDENCE_THRESH: 0.5
+      OVERLAP_THRESH: 0.5
+      STUFF_AREA_LIMIT: 4096
+    INSTANCE_LOSS_WEIGHT: 1.0
+  PIXEL_MEAN: [0, 0, 0, 0, 0, 0, 0, 0, 0]
+  PIXEL_STD: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+  PROPOSAL_GENERATOR:
+    MIN_SIZE: 0
+    NAME: RPN
+  RESNETS:
+    DEFORM_MODULATED: False
+    DEFORM_NUM_GROUPS: 1
+    DEFORM_ON_PER_STAGE: [False, False, False, False]
+    DEPTH: 50
+    NORM: FrozenBN
+    NUM_GROUPS: 1
+    OUT_FEATURES: ['res4']
+    RES2_OUT_CHANNELS: 256
+    RES5_DILATION: 1
+    STEM_OUT_CHANNELS: 64
+    STRIDE_IN_1X1: True
+    WIDTH_PER_GROUP: 64
+  RETINANET:
+    BBOX_REG_LOSS_TYPE: smooth_l1
+    BBOX_REG_WEIGHTS: (1.0, 1.0, 1.0, 1.0)
+    FOCAL_LOSS_ALPHA: 0.25
+    FOCAL_LOSS_GAMMA: 2.0
+    IN_FEATURES: ['p3', 'p4', 'p5', 'p6', 'p7']
+    IOU_LABELS: [0, -1, 1]
+    IOU_THRESHOLDS: [0.4, 0.5]
+    NMS_THRESH_TEST: 0.5
+    NORM: 
+    NUM_CLASSES: 80
+    NUM_CONVS: 4
+    PRIOR_PROB: 0.01
+    SCORE_THRESH_TEST: 0.05
+    SMOOTH_L1_LOSS_BETA: 0.1
+    TOPK_CANDIDATES_TEST: 1000
+  ROI_BOX_CASCADE_HEAD:
+    BBOX_REG_WEIGHTS: ((10.0, 10.0, 5.0, 5.0), (20.0, 20.0, 10.0, 10.0), (30.0, 30.0, 15.0, 15.0))
+    IOUS: (0.5, 0.6, 0.7)
+  ROI_BOX_HEAD:
+    BBOX_REG_LOSS_TYPE: smooth_l1
+    BBOX_REG_LOSS_WEIGHT: 1.0
+    BBOX_REG_WEIGHTS: (10.0, 10.0, 5.0, 5.0)
+    CLS_AGNOSTIC_BBOX_REG: False
+    CONV_DIM: 256
+    FC_DIM: 1024
+    NAME: FastRCNNConvFCHead
+    NORM: 
+    NUM_CONV: 0
+    NUM_FC: 2
+    POOLER_RESOLUTION: 7
+    POOLER_SAMPLING_RATIO: 0
+    POOLER_TYPE: ROIAlignV2
+    SMOOTH_L1_BETA: 0.0
+    TRAIN_ON_PRED_BOXES: False
+  ROI_HEADS:
+    BATCH_SIZE_PER_IMAGE: 512
+    IN_FEATURES: ['p2', 'p3', 'p4', 'p5']
+    IOU_LABELS: [0, 1]
+    IOU_THRESHOLDS: [0.5]
+    NAME: StandardROIHeads
+    NMS_THRESH_TEST: 0.5
+    NUM_CLASSES: 80
+    POSITIVE_FRACTION: 0.25
+    PROPOSAL_APPEND_GT: True
+    SCORE_THRESH_TEST: 0.05
+  ROI_KEYPOINT_HEAD:
+    CONV_DIMS: (512, 512, 512, 512, 512, 512, 512, 512)
+    LOSS_WEIGHT: 1.0
+    MIN_KEYPOINTS_PER_IMAGE: 1
+    NAME: KRCNNConvDeconvUpsampleHead
+    NORMALIZE_LOSS_BY_VISIBLE_KEYPOINTS: True
+    NUM_KEYPOINTS: 17
+    POOLER_RESOLUTION: 14
+    POOLER_SAMPLING_RATIO: 0
+    POOLER_TYPE: ROIAlignV2
+  ROI_MASK_HEAD:
+    CLS_AGNOSTIC_MASK: False
+    CONV_DIM: 256
+    NAME: MaskRCNNConvUpsampleHead
+    NORM: 
+    NUM_CONV: 4
+    POOLER_RESOLUTION: 14
+    POOLER_SAMPLING_RATIO: 0
+    POOLER_TYPE: ROIAlignV2
+  RPN:
+    BATCH_SIZE_PER_IMAGE: 256
+    BBOX_REG_LOSS_TYPE: smooth_l1
+    BBOX_REG_LOSS_WEIGHT: 1.0
+    BBOX_REG_WEIGHTS: (1.0, 1.0, 1.0, 1.0)
+    BOUNDARY_THRESH: -1
+    HEAD_NAME: StandardRPNHead
+    IN_FEATURES: ['p2', 'p3', 'p4', 'p5', 'p6']
+    IOU_LABELS: [0, -1, 1]
+    IOU_THRESHOLDS: [0.3, 0.7]
+    LOSS_WEIGHT: 1.0
+    NMS_THRESH: 0.7
+    POSITIVE_FRACTION: 0.5
+    POST_NMS_TOPK_TEST: 1000
+    POST_NMS_TOPK_TRAIN: 1000
+    PRE_NMS_TOPK_TEST: 1000
+    PRE_NMS_TOPK_TRAIN: 2000
+    SMOOTH_L1_BETA: 0.0
+  SEM_SEG_HEAD:
+    COMMON_STRIDE: 4
+    CONVS_DIM: 128
+    IGNORE_VALUE: 255
+    IN_FEATURES: ['p2', 'p3', 'p4', 'p5']
+    LOSS_WEIGHT: 1.0
+    NAME: SemSegFPNHead
+    NORM: GN
+    NUM_CLASSES: 54
+  VOVNET:
+    BACKBONE_OUT_CHANNELS: 256
+    CONV_BODY: V-39-eSE
+    NORM: FrozenBN
+    OUT_CHANNELS: 256
+    OUT_FEATURES: ['stage2', 'stage3', 'stage4', 'stage5']
+  WEIGHTS: /home/wangcheng/ms-project/checkpoints/MRCN-V2-39-3x/vovnet39_ese_detectron2.pth
+OUTPUT_DIR: checkpoints/MRCN-V2-39-3x
+SEED: -1
+SOLVER:
+  BASE_LR: 0.02
+  BIAS_LR_FACTOR: 1.0
+  CHECKPOINT_PERIOD: 5000
+  CLIP_GRADIENTS:
+    CLIP_TYPE: value
+    CLIP_VALUE: 1.0
+    ENABLED: False
+    NORM_TYPE: 2.0
+  GAMMA: 0.1
+  IMS_PER_BATCH: 2
+  LR_SCHEDULER_NAME: WarmupMultiStepLR
+  MAX_ITER: 270000
+  MOMENTUM: 0.9
+  NESTEROV: False
+  REFERENCE_WORLD_SIZE: 0
+  STEPS: (210000, 250000)
+  WARMUP_FACTOR: 0.001
+  WARMUP_ITERS: 1000
+  WARMUP_METHOD: linear
+  WEIGHT_DECAY: 0.0001
+  WEIGHT_DECAY_BIAS: 0.0001
+  WEIGHT_DECAY_NORM: 0.0
+TEST:
+  AUG:
+    ENABLED: False
+    FLIP: True
+    MAX_SIZE: 4000
+    MIN_SIZES: (400, 500, 600, 700, 800, 900, 1000, 1100, 1200)
+  DETECTIONS_PER_IMAGE: 100
+  EVAL_PERIOD: 0
+  EXPECTED_RESULTS: []
+  KEYPOINT_OKS_SIGMAS: []
+  PRECISE_BN:
+    ENABLED: False
+    NUM_ITER: 200
+VERSION: 2
+VIS_PERIOD: 0
+[09/29 15:37:37] detectron2 INFO: Full config saved to checkpoints/MRCN-V2-39-3x/config.yaml
+[09/29 15:37:37] d2.utils.env INFO: Using a generated random seed 37423420
+[09/29 15:37:56] d2.engine.defaults INFO: Model:
+GeneralizedRCNN(
+  (backbone): FPN(
+    (fpn_lateral2): Conv2d(256, 256, kernel_size=(1, 1), stride=(1, 1))
+    (fpn_output2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (fpn_lateral3): Conv2d(512, 256, kernel_size=(1, 1), stride=(1, 1))
+    (fpn_output3): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (fpn_lateral4): Conv2d(768, 256, kernel_size=(1, 1), stride=(1, 1))
+    (fpn_output4): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (fpn_lateral5): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1))
+    (fpn_output5): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (top_block): LastLevelMaxPool()
+    (bottom_up): VoVNet(
+      (stem): Sequential(
+        (stem_1/conv): Conv2d(9, 64, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+        (stem_1/norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+        (stem_1/relu): ReLU(inplace=True)
+        (stem_2/conv): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        (stem_2/norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+        (stem_2/relu): ReLU(inplace=True)
+        (stem_3/conv): Conv2d(64, 128, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+        (stem_3/norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+        (stem_3/relu): ReLU(inplace=True)
+      )
+      (stage2): _OSA_stage(
+        (OSA2_1): _OSA_module(
+          (layers): ModuleList(
+            (0): Sequential(
+              (OSA2_1_0/conv): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA2_1_0/norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+              (OSA2_1_0/relu): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (OSA2_1_1/conv): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA2_1_1/norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+              (OSA2_1_1/relu): ReLU(inplace=True)
+            )
+            (2): Sequential(
+              (OSA2_1_2/conv): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA2_1_2/norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+              (OSA2_1_2/relu): ReLU(inplace=True)
+            )
+            (3): Sequential(
+              (OSA2_1_3/conv): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA2_1_3/norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+              (OSA2_1_3/relu): ReLU(inplace=True)
+            )
+            (4): Sequential(
+              (OSA2_1_4/conv): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA2_1_4/norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+              (OSA2_1_4/relu): ReLU(inplace=True)
+            )
+          )
+          (concat): Sequential(
+            (OSA2_1_concat/conv): Conv2d(768, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (OSA2_1_concat/norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            (OSA2_1_concat/relu): ReLU(inplace=True)
+          )
+          (ese): eSEModule(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (fc): Conv2d(256, 256, kernel_size=(1, 1), stride=(1, 1))
+            (hsigmoid): Hsigmoid()
+          )
+        )
+      )
+      (stage3): _OSA_stage(
+        (Pooling): MaxPool2d(kernel_size=3, stride=2, padding=0, dilation=1, ceil_mode=True)
+        (OSA3_1): _OSA_module(
+          (layers): ModuleList(
+            (0): Sequential(
+              (OSA3_1_0/conv): Conv2d(256, 160, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA3_1_0/norm): FrozenBatchNorm2d(num_features=160, eps=1e-05)
+              (OSA3_1_0/relu): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (OSA3_1_1/conv): Conv2d(160, 160, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA3_1_1/norm): FrozenBatchNorm2d(num_features=160, eps=1e-05)
+              (OSA3_1_1/relu): ReLU(inplace=True)
+            )
+            (2): Sequential(
+              (OSA3_1_2/conv): Conv2d(160, 160, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA3_1_2/norm): FrozenBatchNorm2d(num_features=160, eps=1e-05)
+              (OSA3_1_2/relu): ReLU(inplace=True)
+            )
+            (3): Sequential(
+              (OSA3_1_3/conv): Conv2d(160, 160, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA3_1_3/norm): FrozenBatchNorm2d(num_features=160, eps=1e-05)
+              (OSA3_1_3/relu): ReLU(inplace=True)
+            )
+            (4): Sequential(
+              (OSA3_1_4/conv): Conv2d(160, 160, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA3_1_4/norm): FrozenBatchNorm2d(num_features=160, eps=1e-05)
+              (OSA3_1_4/relu): ReLU(inplace=True)
+            )
+          )
+          (concat): Sequential(
+            (OSA3_1_concat/conv): Conv2d(1056, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (OSA3_1_concat/norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+            (OSA3_1_concat/relu): ReLU(inplace=True)
+          )
+          (ese): eSEModule(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (fc): Conv2d(512, 512, kernel_size=(1, 1), stride=(1, 1))
+            (hsigmoid): Hsigmoid()
+          )
+        )
+      )
+      (stage4): _OSA_stage(
+        (Pooling): MaxPool2d(kernel_size=3, stride=2, padding=0, dilation=1, ceil_mode=True)
+        (OSA4_1): _OSA_module(
+          (layers): ModuleList(
+            (0): Sequential(
+              (OSA4_1_0/conv): Conv2d(512, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA4_1_0/norm): FrozenBatchNorm2d(num_features=192, eps=1e-05)
+              (OSA4_1_0/relu): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (OSA4_1_1/conv): Conv2d(192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA4_1_1/norm): FrozenBatchNorm2d(num_features=192, eps=1e-05)
+              (OSA4_1_1/relu): ReLU(inplace=True)
+            )
+            (2): Sequential(
+              (OSA4_1_2/conv): Conv2d(192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA4_1_2/norm): FrozenBatchNorm2d(num_features=192, eps=1e-05)
+              (OSA4_1_2/relu): ReLU(inplace=True)
+            )
+            (3): Sequential(
+              (OSA4_1_3/conv): Conv2d(192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA4_1_3/norm): FrozenBatchNorm2d(num_features=192, eps=1e-05)
+              (OSA4_1_3/relu): ReLU(inplace=True)
+            )
+            (4): Sequential(
+              (OSA4_1_4/conv): Conv2d(192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA4_1_4/norm): FrozenBatchNorm2d(num_features=192, eps=1e-05)
+              (OSA4_1_4/relu): ReLU(inplace=True)
+            )
+          )
+          (concat): Sequential(
+            (OSA4_1_concat/conv): Conv2d(1472, 768, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (OSA4_1_concat/norm): FrozenBatchNorm2d(num_features=768, eps=1e-05)
+            (OSA4_1_concat/relu): ReLU(inplace=True)
+          )
+          (ese): eSEModule(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (fc): Conv2d(768, 768, kernel_size=(1, 1), stride=(1, 1))
+            (hsigmoid): Hsigmoid()
+          )
+        )
+        (OSA4_2): _OSA_module(
+          (layers): ModuleList(
+            (0): Sequential(
+              (OSA4_2_0/conv): Conv2d(768, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA4_2_0/norm): FrozenBatchNorm2d(num_features=192, eps=1e-05)
+              (OSA4_2_0/relu): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (OSA4_2_1/conv): Conv2d(192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA4_2_1/norm): FrozenBatchNorm2d(num_features=192, eps=1e-05)
+              (OSA4_2_1/relu): ReLU(inplace=True)
+            )
+            (2): Sequential(
+              (OSA4_2_2/conv): Conv2d(192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA4_2_2/norm): FrozenBatchNorm2d(num_features=192, eps=1e-05)
+              (OSA4_2_2/relu): ReLU(inplace=True)
+            )
+            (3): Sequential(
+              (OSA4_2_3/conv): Conv2d(192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA4_2_3/norm): FrozenBatchNorm2d(num_features=192, eps=1e-05)
+              (OSA4_2_3/relu): ReLU(inplace=True)
+            )
+            (4): Sequential(
+              (OSA4_2_4/conv): Conv2d(192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA4_2_4/norm): FrozenBatchNorm2d(num_features=192, eps=1e-05)
+              (OSA4_2_4/relu): ReLU(inplace=True)
+            )
+          )
+          (concat): Sequential(
+            (OSA4_2_concat/conv): Conv2d(1728, 768, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (OSA4_2_concat/norm): FrozenBatchNorm2d(num_features=768, eps=1e-05)
+            (OSA4_2_concat/relu): ReLU(inplace=True)
+          )
+          (ese): eSEModule(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (fc): Conv2d(768, 768, kernel_size=(1, 1), stride=(1, 1))
+            (hsigmoid): Hsigmoid()
+          )
+        )
+      )
+      (stage5): _OSA_stage(
+        (Pooling): MaxPool2d(kernel_size=3, stride=2, padding=0, dilation=1, ceil_mode=True)
+        (OSA5_1): _OSA_module(
+          (layers): ModuleList(
+            (0): Sequential(
+              (OSA5_1_0/conv): Conv2d(768, 224, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA5_1_0/norm): FrozenBatchNorm2d(num_features=224, eps=1e-05)
+              (OSA5_1_0/relu): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (OSA5_1_1/conv): Conv2d(224, 224, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA5_1_1/norm): FrozenBatchNorm2d(num_features=224, eps=1e-05)
+              (OSA5_1_1/relu): ReLU(inplace=True)
+            )
+            (2): Sequential(
+              (OSA5_1_2/conv): Conv2d(224, 224, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA5_1_2/norm): FrozenBatchNorm2d(num_features=224, eps=1e-05)
+              (OSA5_1_2/relu): ReLU(inplace=True)
+            )
+            (3): Sequential(
+              (OSA5_1_3/conv): Conv2d(224, 224, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA5_1_3/norm): FrozenBatchNorm2d(num_features=224, eps=1e-05)
+              (OSA5_1_3/relu): ReLU(inplace=True)
+            )
+            (4): Sequential(
+              (OSA5_1_4/conv): Conv2d(224, 224, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA5_1_4/norm): FrozenBatchNorm2d(num_features=224, eps=1e-05)
+              (OSA5_1_4/relu): ReLU(inplace=True)
+            )
+          )
+          (concat): Sequential(
+            (OSA5_1_concat/conv): Conv2d(1888, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (OSA5_1_concat/norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+            (OSA5_1_concat/relu): ReLU(inplace=True)
+          )
+          (ese): eSEModule(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (fc): Conv2d(1024, 1024, kernel_size=(1, 1), stride=(1, 1))
+            (hsigmoid): Hsigmoid()
+          )
+        )
+        (OSA5_2): _OSA_module(
+          (layers): ModuleList(
+            (0): Sequential(
+              (OSA5_2_0/conv): Conv2d(1024, 224, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA5_2_0/norm): FrozenBatchNorm2d(num_features=224, eps=1e-05)
+              (OSA5_2_0/relu): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (OSA5_2_1/conv): Conv2d(224, 224, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA5_2_1/norm): FrozenBatchNorm2d(num_features=224, eps=1e-05)
+              (OSA5_2_1/relu): ReLU(inplace=True)
+            )
+            (2): Sequential(
+              (OSA5_2_2/conv): Conv2d(224, 224, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA5_2_2/norm): FrozenBatchNorm2d(num_features=224, eps=1e-05)
+              (OSA5_2_2/relu): ReLU(inplace=True)
+            )
+            (3): Sequential(
+              (OSA5_2_3/conv): Conv2d(224, 224, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA5_2_3/norm): FrozenBatchNorm2d(num_features=224, eps=1e-05)
+              (OSA5_2_3/relu): ReLU(inplace=True)
+            )
+            (4): Sequential(
+              (OSA5_2_4/conv): Conv2d(224, 224, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+              (OSA5_2_4/norm): FrozenBatchNorm2d(num_features=224, eps=1e-05)
+              (OSA5_2_4/relu): ReLU(inplace=True)
+            )
+          )
+          (concat): Sequential(
+            (OSA5_2_concat/conv): Conv2d(2144, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (OSA5_2_concat/norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+            (OSA5_2_concat/relu): ReLU(inplace=True)
+          )
+          (ese): eSEModule(
+            (avg_pool): AdaptiveAvgPool2d(output_size=1)
+            (fc): Conv2d(1024, 1024, kernel_size=(1, 1), stride=(1, 1))
+            (hsigmoid): Hsigmoid()
+          )
+        )
+      )
+    )
+  )
+  (proposal_generator): RPN(
+    (rpn_head): StandardRPNHead(
+      (conv): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (objectness_logits): Conv2d(256, 3, kernel_size=(1, 1), stride=(1, 1))
+      (anchor_deltas): Conv2d(256, 12, kernel_size=(1, 1), stride=(1, 1))
+    )
+    (anchor_generator): DefaultAnchorGenerator(
+      (cell_anchors): BufferList()
+    )
+  )
+  (roi_heads): StandardROIHeads(
+    (box_pooler): ROIPooler(
+      (level_poolers): ModuleList(
+        (0): ROIAlign(output_size=(7, 7), spatial_scale=0.25, sampling_ratio=0, aligned=True)
+        (1): ROIAlign(output_size=(7, 7), spatial_scale=0.125, sampling_ratio=0, aligned=True)
+        (2): ROIAlign(output_size=(7, 7), spatial_scale=0.0625, sampling_ratio=0, aligned=True)
+        (3): ROIAlign(output_size=(7, 7), spatial_scale=0.03125, sampling_ratio=0, aligned=True)
+      )
+    )
+    (box_head): FastRCNNConvFCHead(
+      (fc1): Linear(in_features=12544, out_features=1024, bias=True)
+      (fc2): Linear(in_features=1024, out_features=1024, bias=True)
+    )
+    (box_predictor): FastRCNNOutputLayers(
+      (cls_score): Linear(in_features=1024, out_features=81, bias=True)
+      (bbox_pred): Linear(in_features=1024, out_features=320, bias=True)
+    )
+    (mask_pooler): ROIPooler(
+      (level_poolers): ModuleList(
+        (0): ROIAlign(output_size=(14, 14), spatial_scale=0.25, sampling_ratio=0, aligned=True)
+        (1): ROIAlign(output_size=(14, 14), spatial_scale=0.125, sampling_ratio=0, aligned=True)
+        (2): ROIAlign(output_size=(14, 14), spatial_scale=0.0625, sampling_ratio=0, aligned=True)
+        (3): ROIAlign(output_size=(14, 14), spatial_scale=0.03125, sampling_ratio=0, aligned=True)
+      )
+    )
+    (mask_head): MaskRCNNConvUpsampleHead(
+      (mask_fcn1): Conv2d(
+        256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)
+        (activation): ReLU()
+      )
+      (mask_fcn2): Conv2d(
+        256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)
+        (activation): ReLU()
+      )
+      (mask_fcn3): Conv2d(
+        256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)
+        (activation): ReLU()
+      )
+      (mask_fcn4): Conv2d(
+        256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)
+        (activation): ReLU()
+      )
+      (deconv): ConvTranspose2d(256, 256, kernel_size=(2, 2), stride=(2, 2))
+      (deconv_relu): ReLU()
+      (predictor): Conv2d(256, 80, kernel_size=(1, 1), stride=(1, 1))
+    )
+  )
+)
+[09/29 15:37:57] d2.data.datasets.coco INFO: Loaded 16187 images in COCO format from /data/ms_data/coco_json/tjmu/train/single_14cls_filter2.json
+[09/29 15:37:59] d2.data.datasets.coco INFO: Loading /data/ms_data/coco_json/tjmu1/train/single_14cls_filter2.json takes 1.44 seconds.
+[09/29 15:37:59] d2.data.datasets.coco INFO: Loaded 19950 images in COCO format from /data/ms_data/coco_json/tjmu1/train/single_14cls_filter2.json
+[09/29 15:38:01] d2.data.datasets.coco INFO: Loading /data/ms_data/coco_json/tjmu2/train/single_14cls_filter2.json takes 1.26 seconds.
+[09/29 15:38:01] d2.data.datasets.coco INFO: Loaded 25138 images in COCO format from /data/ms_data/coco_json/tjmu2/train/single_14cls_filter2.json
+[09/29 15:38:03] d2.data.datasets.coco INFO: Loading /data/ms_data/coco_json/lg_meinian/single_14cls_filter2.json takes 1.49 seconds.
+[09/29 15:38:03] d2.data.datasets.coco INFO: Loaded 22254 images in COCO format from /data/ms_data/coco_json/lg_meinian/single_14cls_filter2.json
+[09/29 15:38:03] d2.data.build INFO: Removed 0 images with no usable annotations. 83529 images left.
+[09/29 15:38:05] d2.data.build INFO: Distribution of instances among all 14 categories:
+[36m|  category  | #instances   |  category  | #instances   |  category  | #instances   |
+|:----------:|:-------------|:----------:|:-------------|:----------:|:-------------|
+|    心包增厚    | 196          |    心包积液    | 9809         |    心包钙化    | 2302         |
+|   食管裂孔疝    | 2938         |   甲状腺结节    | 7834         | 冠状动脉钙化/支架影 | 50706        |
+|  主动脉壁间血肿   | 238          | 主动脉内膜钙化移位  | 665          |   二尖瓣钙化    | 5169         |
+|   主动脉瓣钙化   | 7851         |   纵隔结节肿块   | 27804        |    膈淋巴肿    | 1361         |
+|   腋窝淋巴肿    | 9838         |   內乳淋巴肿    | 61           |            |              |
+|   total    | 126772       |            |              |            |              |[0m
+[09/29 15:38:05] d2.data.common INFO: Serializing 83529 elements to byte tensors and concatenating them all ...
+[09/29 15:38:06] d2.data.common INFO: Serialized dataset takes 291.72 MiB
+[09/29 15:38:06] d2.data.dataset_mapper INFO: Augmentations used in training: [ResizeShortestEdge(short_edge_length=(400, 600, 800, 1000, 1200), max_size=1200, sample_style='choice'), RandomFlip(), RandomZFlip()]
+[09/29 15:38:06] d2.data.build INFO: Using training sampler TrainingSampler
+[09/29 15:38:07] fvcore.common.checkpoint INFO: Loading checkpoint from /home/wangcheng/ms-project/checkpoints/MRCN-V2-39-3x/vovnet39_ese_detectron2.pth
+[09/29 15:38:07] fvcore.common.checkpoint WARNING: Skip loading parameter 'backbone.bottom_up.stem.stem_1/conv.weight' to the model due to incompatible shapes: (64, 3, 3, 3) in the checkpoint but (64, 9, 3, 3) in the model! You might want to double check if this is expected.
+[09/29 15:38:07] fvcore.common.checkpoint INFO: Some model parameters or buffers are not found in the checkpoint:
+  [34mbackbone.fpn_lateral4.{weight, bias}[0m
+  [34mbackbone.fpn_lateral2.{bias, weight}[0m
+  [34mbackbone.fpn_lateral5.{weight, bias}[0m
+  [34mproposal_generator.rpn_head.objectness_logits.{bias, weight}[0m
+  [34mroi_heads.mask_head.mask_fcn3.{bias, weight}[0m
+  [34mbackbone.bottom_up.stem.stem_1/conv.weight[0m
+  [34mproposal_generator.rpn_head.conv.{weight, bias}[0m
+  [34mproposal_generator.rpn_head.anchor_deltas.{bias, weight}[0m
+  [34mroi_heads.mask_head.mask_fcn1.{bias, weight}[0m
+  [34mbackbone.fpn_output2.{bias, weight}[0m
+  [34mroi_heads.mask_head.predictor.{weight, bias}[0m
+  [34mproposal_generator.anchor_generator.cell_anchors.{3, 4, 1, 0, 2}[0m
+  [34mroi_heads.mask_head.deconv.{bias, weight}[0m
+  [34mbackbone.fpn_lateral3.{weight, bias}[0m
+  [34mroi_heads.mask_head.mask_fcn2.{bias, weight}[0m
+  [34mroi_heads.mask_head.mask_fcn4.{bias, weight}[0m
+  [34mroi_heads.box_predictor.bbox_pred.{weight, bias}[0m
+  [34mroi_heads.box_head.fc1.{weight, bias}[0m
+  [34mbackbone.fpn_output5.{bias, weight}[0m
+  [34mroi_heads.box_head.fc2.{weight, bias}[0m
+  [34mbackbone.fpn_output4.{weight, bias}[0m
+  [34mroi_heads.box_predictor.cls_score.{weight, bias}[0m
+  [34mbackbone.fpn_output3.{weight, bias}[0m
+[09/29 15:38:07] fvcore.common.checkpoint INFO: The checkpoint state_dict contains keys that are not used by the model:
+  [35mbackbone.bottom_up.stem.stem_1/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stem.stem_2/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stem.stem_3/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stage2.OSA2_1.layers.0.OSA2_1_0/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stage2.OSA2_1.layers.1.OSA2_1_1/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stage2.OSA2_1.layers.2.OSA2_1_2/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stage2.OSA2_1.layers.3.OSA2_1_3/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stage2.OSA2_1.layers.4.OSA2_1_4/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stage2.OSA2_1.concat.OSA2_1_concat/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stage3.OSA3_1.layers.0.OSA3_1_0/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stage3.OSA3_1.layers.1.OSA3_1_1/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stage3.OSA3_1.layers.2.OSA3_1_2/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stage3.OSA3_1.layers.3.OSA3_1_3/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stage3.OSA3_1.layers.4.OSA3_1_4/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stage3.OSA3_1.concat.OSA3_1_concat/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stage4.OSA4_1.layers.0.OSA4_1_0/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stage4.OSA4_1.layers.1.OSA4_1_1/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stage4.OSA4_1.layers.2.OSA4_1_2/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stage4.OSA4_1.layers.3.OSA4_1_3/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stage4.OSA4_1.layers.4.OSA4_1_4/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stage4.OSA4_1.concat.OSA4_1_concat/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stage4.OSA4_2.layers.0.OSA4_2_0/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stage4.OSA4_2.layers.1.OSA4_2_1/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stage4.OSA4_2.layers.2.OSA4_2_2/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stage4.OSA4_2.layers.3.OSA4_2_3/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stage4.OSA4_2.layers.4.OSA4_2_4/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stage4.OSA4_2.concat.OSA4_2_concat/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stage5.OSA5_1.layers.0.OSA5_1_0/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stage5.OSA5_1.layers.1.OSA5_1_1/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stage5.OSA5_1.layers.2.OSA5_1_2/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stage5.OSA5_1.layers.3.OSA5_1_3/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stage5.OSA5_1.layers.4.OSA5_1_4/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stage5.OSA5_1.concat.OSA5_1_concat/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stage5.OSA5_2.layers.0.OSA5_2_0/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stage5.OSA5_2.layers.1.OSA5_2_1/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stage5.OSA5_2.layers.2.OSA5_2_2/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stage5.OSA5_2.layers.3.OSA5_2_3/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stage5.OSA5_2.layers.4.OSA5_2_4/norm.num_batches_tracked[0m
+  [35mbackbone.bottom_up.stage5.OSA5_2.concat.OSA5_2_concat/norm.num_batches_tracked[0m
+[09/29 15:38:07] d2.engine.train_loop INFO: Starting training from iteration 0
+[09/29 15:38:22] d2.utils.events INFO:  eta: 16:36:13  iter: 19  total_loss: 1.624  loss_cls: 0.3029  loss_box_reg: 0.002049  loss_mask: 0.6719  loss_rpn_cls: 0.4538  loss_rpn_loc: 0.03426  time: 0.4776  data_time: 0.0305  lr: 0.00039962  max_mem: 1475M
+[09/29 15:38:30] d2.utils.events INFO:  eta: 13:53:36  iter: 39  total_loss: 1.12  loss_cls: 0.09048  loss_box_reg: 0.0009371  loss_mask: 0.6687  loss_rpn_cls: 0.2635  loss_rpn_loc: 0.1464  time: 0.4268  data_time: 0.0218  lr: 0.00079922  max_mem: 1475M
+[09/29 15:38:32] d2.utils.events INFO:  eta: 10:16:05  iter: 59  total_loss: 0.9544  loss_cls: 0.03935  loss_box_reg: 0.000327  loss_mask: 0.6553  loss_rpn_cls: 0.1877  loss_rpn_loc: 0.08144  time: 0.3251  data_time: 0.0265  lr: 0.0011988  max_mem: 1475M
+[09/29 15:38:35] d2.utils.events INFO:  eta: 9:37:43  iter: 79  total_loss: 0.9607  loss_cls: 0.05134  loss_box_reg: 0.0003095  loss_mask: 0.6605  loss_rpn_cls: 0.2032  loss_rpn_loc: 0.0703  time: 0.2745  data_time: 0.0316  lr: 0.0015984  max_mem: 1475M
+[09/29 15:38:37] d2.utils.events INFO:  eta: 9:20:23  iter: 99  total_loss: 0.9515  loss_cls: 0.03327  loss_box_reg: 0.0002484  loss_mask: 0.6469  loss_rpn_cls: 0.199  loss_rpn_loc: 0.029  time: 0.2442  data_time: 0.0293  lr: 0.001998  max_mem: 1475M
+[09/29 15:38:40] d2.utils.events INFO:  eta: 9:15:52  iter: 119  total_loss: 0.887  loss_cls: 0.03067  loss_box_reg: 0.0002658  loss_mask: 0.6306  loss_rpn_cls: 0.1501  loss_rpn_loc: 0.03738  time: 0.2240  data_time: 0.0328  lr: 0.0023976  max_mem: 1475M
+[09/29 15:38:40] d2.engine.hooks INFO: Overall training speed: 120 iterations in 0:00:26 (0.2223 s / it)
+[09/29 15:38:40] d2.engine.hooks INFO: Total training time: 0:00:26 (0:00:00 on hooks)

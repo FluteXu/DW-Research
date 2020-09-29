@@ -1,6 +1,6 @@
 _BASE_: "../Base-RCNN-VoVNet-FPN.yaml"
 MODEL:
-  WEIGHTS: "/home/xudi/.cache/torch/checkpoints/vovnet39_ese_detectron2.pth" # "https://www.dropbox.com/s/q98pypf96rhtd8y/vovnet39_ese_detectron2.pth?dl=1"
+  WEIGHTS: "/home/wangcheng/ms-project/checkpoints/MRCN-V2-39-3x/vovnet39_ese_detectron2.pth"
   MASK_ON: True
   VOVNET:
     CONV_BODY : "V-39-eSE"
