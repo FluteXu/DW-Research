@@ -20,6 +20,8 @@ from detectron2.evaluation import (
     )
 from detectron2.data import MetadataCatalog
 
+import detectron2.modeling.backbone
+
 
 class Trainer(DefaultTrainer):
     @classmethod

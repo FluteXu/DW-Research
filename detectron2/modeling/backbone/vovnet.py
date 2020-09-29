@@ -7,7 +7,7 @@ import torch.nn.functional as F
 from detectron2.layers import FrozenBatchNorm2d, ShapeSpec, get_norm
 from .backbone import Backbone
 from .build import BACKBONE_REGISTRY
-from .backbone.fpn import FPN, LastLevelMaxPool
+from .fpn import FPN, LastLevelMaxPool
 
 __all__ = ["VoVNet", "build_vovnet_backbone", "build_vovnet_fpn_backbone"]
 

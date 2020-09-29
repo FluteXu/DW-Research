@@ -30,19 +30,18 @@ INPUT:
   IGNORE_EMPTY: true
   MASK_FORMAT: polygon
   MAX_SIZE_TEST: 1333
-  MAX_SIZE_TRAIN: 1333
+  MAX_SIZE_TRAIN: 1200
   MIN_SIZE_TEST: 800
   MIN_SIZE_TRAIN:
-  - 640
-  - 672
-  - 704
-  - 736
-  - 768
+  - 400
+  - 600
   - 800
+  - 1000
+  - 1200
   MIN_SIZE_TRAIN_SAMPLING: choice
   NUM_IMAGES_3DCE: 3
   RANDOM_FLIP: horizontal
-  SLICE_NUM: 3
+  SLICE_NUM: 9
 MODEL:
   ANCHOR_GENERATOR:
     ANGLES:
@@ -294,7 +293,7 @@ MODEL:
     - stage3
     - stage4
     - stage5
-  WEIGHTS: https://www.dropbox.com/s/q98pypf96rhtd8y/vovnet39_ese_detectron2.pth?dl=1
+  WEIGHTS: /home/xudi/.cache/torch/checkpoints/vovnet39_ese_detectron2.pth
 OUTPUT_DIR: checkpoints/MRCN-V2-39-3x
 SEED: -1
 SOLVER:

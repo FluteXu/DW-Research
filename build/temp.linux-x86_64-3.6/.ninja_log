@@ -1,14 +1,14 @@
 # ninja log v5
-5	515	1601355084068516957	/home/wangcheng/ms-project/build/temp.linux-x86_64-3.6/home/wangcheng/ms-project/detectron2/layers/csrc/cuda_version.o	6848923e89a3e4e7
-0	4671	1601355088224513679	/home/wangcheng/ms-project/build/temp.linux-x86_64-3.6/home/wangcheng/ms-project/detectron2/layers/csrc/box_iou_rotated/box_iou_rotated_cpu.o	e7a62a63e7d825a5
-2	5252	1601355088804513220	/home/wangcheng/ms-project/build/temp.linux-x86_64-3.6/home/wangcheng/ms-project/detectron2/layers/csrc/cocoeval/cocoeval.o	1a8729efe71410ce
-3	5526	1601355089076513004	/home/wangcheng/ms-project/build/temp.linux-x86_64-3.6/home/wangcheng/ms-project/detectron2/layers/csrc/nms_rotated/nms_rotated_cpu.o	53402dafa8c6d614
-1	7280	1601355090828511615	/home/wangcheng/ms-project/build/temp.linux-x86_64-3.6/home/wangcheng/ms-project/detectron2/layers/csrc/ROIAlign/ROIAlign_cpu.o	3a73737686ab38c8
-1	7525	1601355091076511418	/home/wangcheng/ms-project/build/temp.linux-x86_64-3.6/home/wangcheng/ms-project/detectron2/layers/csrc/ROIAlignRotated/ROIAlignRotated_cpu.o	49677ad73dcee857
-6	9780	1601355093328509626	/home/wangcheng/ms-project/build/temp.linux-x86_64-3.6/home/wangcheng/ms-project/detectron2/layers/csrc/box_iou_rotated/box_iou_rotated_cuda.o	d569351fe8d6b58a
-5	9837	1601355093380509585	/home/wangcheng/ms-project/build/temp.linux-x86_64-3.6/home/wangcheng/ms-project/detectron2/layers/csrc/ROIAlign/ROIAlign_cuda.o	e8a4cc0052eb872c
-6	9896	1601355093444509534	/home/wangcheng/ms-project/build/temp.linux-x86_64-3.6/home/wangcheng/ms-project/detectron2/layers/csrc/ROIAlignRotated/ROIAlignRotated_cuda.o	e10b29da11b2de3f
-6	10031	1601355093580509426	/home/wangcheng/ms-project/build/temp.linux-x86_64-3.6/home/wangcheng/ms-project/detectron2/layers/csrc/nms_rotated/nms_rotated_cuda.o	c199d11d0c8947f3
-5	10168	1601355093712509320	/home/wangcheng/ms-project/build/temp.linux-x86_64-3.6/home/wangcheng/ms-project/detectron2/layers/csrc/deformable/deform_conv_cuda_kernel.o	ef390a1847a73f76
-6	13379	1601355096924506754	/home/wangcheng/ms-project/build/temp.linux-x86_64-3.6/home/wangcheng/ms-project/detectron2/layers/csrc/deformable/deform_conv_cuda.o	67f7d3f7a237099e
-0	18159	1601355101704502913	/home/wangcheng/ms-project/build/temp.linux-x86_64-3.6/home/wangcheng/ms-project/detectron2/layers/csrc/vision.o	783ff9939cf3991
+2	428	0	/home/xudi/ms-project/build/temp.linux-x86_64-3.6/home/xudi/ms-project/detectron2/layers/csrc/cuda_version.o	3d7bd83c351ae5f6
+1	4602	0	/home/xudi/ms-project/build/temp.linux-x86_64-3.6/home/xudi/ms-project/detectron2/layers/csrc/box_iou_rotated/box_iou_rotated_cpu.o	503cb8227604c8b2
+1	5185	0	/home/xudi/ms-project/build/temp.linux-x86_64-3.6/home/xudi/ms-project/detectron2/layers/csrc/cocoeval/cocoeval.o	db5214a9298921f7
+1	5440	0	/home/xudi/ms-project/build/temp.linux-x86_64-3.6/home/xudi/ms-project/detectron2/layers/csrc/nms_rotated/nms_rotated_cpu.o	752f702a7b3267d2
+0	7260	0	/home/xudi/ms-project/build/temp.linux-x86_64-3.6/home/xudi/ms-project/detectron2/layers/csrc/ROIAlign/ROIAlign_cpu.o	6c84838a4afbae35
+1	7297	0	/home/xudi/ms-project/build/temp.linux-x86_64-3.6/home/xudi/ms-project/detectron2/layers/csrc/ROIAlignRotated/ROIAlignRotated_cpu.o	b02608a4d7ba12fb
+2	9183	0	/home/xudi/ms-project/build/temp.linux-x86_64-3.6/home/xudi/ms-project/detectron2/layers/csrc/box_iou_rotated/box_iou_rotated_cuda.o	3a9ec792eae2c928
+2	9333	0	/home/xudi/ms-project/build/temp.linux-x86_64-3.6/home/xudi/ms-project/detectron2/layers/csrc/ROIAlign/ROIAlign_cuda.o	e1c8a3d020829dfe
+2	9651	0	/home/xudi/ms-project/build/temp.linux-x86_64-3.6/home/xudi/ms-project/detectron2/layers/csrc/deformable/deform_conv_cuda_kernel.o	54c2dc0b9111b17a
+2	9773	0	/home/xudi/ms-project/build/temp.linux-x86_64-3.6/home/xudi/ms-project/detectron2/layers/csrc/nms_rotated/nms_rotated_cuda.o	4e3f7c9cdcfb71a5
+2	9779	0	/home/xudi/ms-project/build/temp.linux-x86_64-3.6/home/xudi/ms-project/detectron2/layers/csrc/ROIAlignRotated/ROIAlignRotated_cuda.o	a1038c19c5893d7c
+2	13105	0	/home/xudi/ms-project/build/temp.linux-x86_64-3.6/home/xudi/ms-project/detectron2/layers/csrc/deformable/deform_conv_cuda.o	18e1baa9195e5435
+1	17861	0	/home/xudi/ms-project/build/temp.linux-x86_64-3.6/home/xudi/ms-project/detectron2/layers/csrc/vision.o	aa4a6828a749cf80
