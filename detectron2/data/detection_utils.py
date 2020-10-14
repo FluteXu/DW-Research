@@ -111,8 +111,8 @@ def convert_image_to_rgb(image, format):
         image = np.dot(image, np.array(_M_YUV2RGB).T)
         image = image * 255.0
     else:
-        if format == "L":
-            image = image[:, :, 0]
+        # if format == "L":
+        #     image = image[:, :, 0]
         image = image.astype(np.uint8)
         image = np.asarray(Image.fromarray(image, mode=format).convert("RGB"))
     return image

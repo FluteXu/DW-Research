@@ -13,7 +13,7 @@ from fvcore.common.timer import Timer
 from PIL import Image
 
 from detectron2.structures import Boxes, BoxMode, PolygonMasks
-
+from detectron2.data.detection_utils import convert_image_to_rgb
 from .. import DatasetCatalog, MetadataCatalog
 
 """
@@ -471,6 +471,7 @@ if __name__ == "__main__":
     os.makedirs(dirname, exist_ok=True)
     for d in dicts:
         img = np.array(Image.open(d["file_name"]))
+        img = convert_image_to_rgb(img, "L")
         visualizer = Visualizer(img, metadata=meta)
         vis = visualizer.draw_dataset_dict(d)
         fpath = os.path.join(dirname, os.path.basename(d["file_name"]))

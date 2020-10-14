@@ -1,12 +1,14 @@
 # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved
+import os
+import cv2
 import copy
 import logging
 import numpy as np
 from typing import List, Optional, Union
 import torch
-
+from PIL import Image
 from detectron2.config import configurable
-
+from detectron2.data.detection_utils import convert_image_to_rgb
 from . import detection_utils as utils
 from . import transforms as T
 
@@ -113,6 +115,32 @@ class DatasetMapper:
             )
         return ret
 
+    @classmethod
+    def vis_transform(cls, input, prior_flag):
+        from detectron2.utils.visualizer import Visualizer
+
+        dirname = "coco-data-trans-vis"
+        if not os.path.exists(dirname):
+            os.mkdir(dirname)
+
+        if prior_flag:
+            img = np.array(Image.open(input["file_name"]))
+            img = convert_image_to_rgb(img, "L")
+            visualizer = Visualizer(img, None)
+            vis = visualizer.draw_dataset_dict(input)
+            fpath = os.path.join(dirname, os.path.basename(input["file_name"]))
+            print('vis_transform fpath: ', fpath)
+            vis.save(fpath)
+        else:
+            center_idx = int(len(input["image"])/2)
+            img = input["image"][center_idx]
+            # img = convert_image_to_rgb(img.permute(1, 2, 0), self.input_format)
+            img = convert_image_to_rgb(img, "L")
+            v_gt = Visualizer(img, None)
+            v_gt = v_gt.overlay_instances(boxes=input["instances"].gt_boxes)
+            fpath = os.path.join(dirname, os.path.basename(input["file_name"]))
+            print('vis_transform fpath: ', fpath)
+            v_gt.save(fpath)
 
     def __call__(self, dataset_dict):
         """
@@ -123,6 +151,9 @@ class DatasetMapper:
             dict: a format that builtin models in detectron2 accept
         """
         dataset_dict = copy.deepcopy(dataset_dict)  # it will be modified by code below
+        # prior to transform
+        # self.vis_transform(dataset_dict, True)
+
         # USER: Write your own image loading if it's not from a file
         # image = utils.read_image(dataset_dict["file_name"], format=self.image_format)
         image = utils.read_image_cv2(dataset_dict["file_name"], self.image_slice_num)
@@ -187,4 +218,7 @@ class DatasetMapper:
             if self.recompute_boxes:
                 instances.gt_boxes = instances.gt_masks.get_bounding_boxes()
             dataset_dict["instances"] = utils.filter_empty_instances(instances)
+
+        # posterior to transform
+        # self.vis_transform(dataset_dict, False)
         return dataset_dict

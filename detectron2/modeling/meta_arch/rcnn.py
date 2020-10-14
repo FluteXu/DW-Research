@@ -105,8 +105,10 @@ class GeneralizedRCNN(nn.Module):
         max_vis_prop = 20
 
         for input, prop in zip(batched_inputs, proposals):
-            img = input["image"]
-            img = convert_image_to_rgb(img.permute(1, 2, 0), self.input_format)
+            center_idx = int(len(input["image"])/2)
+            img = input["image"][center_idx]
+            # img = convert_image_to_rgb(img.permute(1, 2, 0), self.input_format)
+            img = convert_image_to_rgb(img, "L")
             v_gt = Visualizer(img, None)
             v_gt = v_gt.overlay_instances(boxes=input["instances"].gt_boxes)
             anno_img = v_gt.get_image()

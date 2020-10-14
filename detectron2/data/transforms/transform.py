@@ -130,7 +130,7 @@ class ResizeTransform(Transform):
 
         # CVF method instead of TVF method
         interp_method = interp if interp is not None else self.interp
-        ret = cv2.resize(img, dsize=(self.w, self.h), interpolation=INTER_MODE[interp_method])
+        ret = cv2.resize(img, dsize=(self.new_w, self.new_h), interpolation=INTER_MODE[interp_method])
         return ret
 
     def apply_coords(self, coords):
