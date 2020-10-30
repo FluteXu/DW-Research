@@ -26,7 +26,8 @@ def build_backbone(cfg, input_shape=None):
     """
     if input_shape is None:
         input_shape = ShapeSpec(channels=len(cfg.MODEL.PIXEL_MEAN))
-
+    if cfg.MODEL.USE_3D_FUSION:
+        input_shape = ShapeSpec(channels=cfg.INPUT.NUM_IMAGES_3DCE)
     backbone_name = cfg.MODEL.BACKBONE.NAME
     backbone = BACKBONE_REGISTRY.get(backbone_name)(cfg, input_shape)
     assert isinstance(backbone, Backbone)

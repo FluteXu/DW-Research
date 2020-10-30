@@ -16,7 +16,6 @@ from ..postprocessing import detector_postprocess
 from ..proposal_generator import build_proposal_generator
 from ..roi_heads import build_roi_heads
 from .build import META_ARCH_REGISTRY
-from .feature_fusion_3dce import FeatureFusion3dce
 
 __all__ = ["GeneralizedRCNN", "ProposalNetwork"]
 
@@ -41,8 +40,6 @@ class GeneralizedRCNN(nn.Module):
         pixel_std: Tuple[float],
         input_format: Optional[str] = None,
         vis_period: int = 0,
-        feature_fuse: FeatureFusion3dce,
-        use_3d_fusion: bool = False,
     ):
         """
         NOTE: this interface is experimental.
@@ -73,16 +70,9 @@ class GeneralizedRCNN(nn.Module):
             self.pixel_mean.shape == self.pixel_std.shape
         ), f"{self.pixel_mean} and {self.pixel_std} have different shapes!"
 
-        self.use_3d_fusion = use_3d_fusion
-        if self.use_3d_fusion:
-            # the original 3DCE fuse last feature maps
-            self.feature_fuse = feature_fuse
-
     @classmethod
     def from_config(cls, cfg):
         backbone = build_backbone(cfg)
-        feature_fuse = FeatureFusion3dce(cfg)
-        
         return {
             "backbone": backbone,
             "proposal_generator": build_proposal_generator(cfg, backbone.output_shape()),
@@ -91,8 +81,6 @@ class GeneralizedRCNN(nn.Module):
             "vis_period": cfg.VIS_PERIOD,
             "pixel_mean": cfg.MODEL.PIXEL_MEAN,
             "pixel_std": cfg.MODEL.PIXEL_STD,
-            "feature_fuse": feature_fuse,
-            "use_3d_fusion": cfg.MODEL.USE_3D_FUSION
         }
 
     @property
@@ -168,14 +156,7 @@ class GeneralizedRCNN(nn.Module):
         else:
             gt_instances = None
 
-        if self.use_3d_fusion:
-            _, _, w, h = images.tensor.size()
-            images.tensor = torch.reshape(images.tensor, (-1, 3, w, h))
-
         features = self.backbone(images.tensor)
-
-        if self.use_3d_fusion:
-            features, images = self.feature_fuse(features, images)
 
         if self.proposal_generator:
             proposals, proposal_losses = self.proposal_generator(images, features, gt_instances)

@@ -87,10 +87,10 @@ _C.INPUT.FORMAT = "BGR"
 _C.INPUT.MASK_FORMAT = "polygon"  # alternative: "bitmask"
 
 # slice number
-_C.INPUT.SLICE_NUM = 9
-_C.INPUT.IGNORE_EMPTY = True
-# 3dce options
+_C.INPUT.SLICE_NUM = 3
 _C.INPUT.NUM_IMAGES_3DCE = 3
+_C.INPUT.IGNORE_EMPTY = True
+
 
 # -----------------------------------------------------------------------------
 # Dataset
@@ -139,11 +139,6 @@ _C.MODEL.BACKBONE.NAME = "build_resnet_backbone"
 # There are 5 stages in ResNet. The first is a convolution, and the following
 # stages are each group of residual blocks.
 _C.MODEL.BACKBONE.FREEZE_AT = -1
-
-# 3dce options
-_C.MODEL.USE_3D_FUSION = False
-_C.MODEL.BACKBONE.IN_CHANNELS = 256
-_C.MODEL.BACKBONE.OUT_CHANNELS = 256
 
 
 # ---------------------------------------------------------------------------- #
