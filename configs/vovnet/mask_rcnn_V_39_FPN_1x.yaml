@@ -1,0 +1,10 @@
+_BASE_: "../Base-RCNN-VoVNet-FPN.yaml"
+MODEL:
+  WEIGHTS: "/home/wangcheng/ms-project/checkpoints/vovnet39_ese_detectron2.pth"
+  MASK_ON: True
+  VOVNET:
+    CONV_BODY : "V-39-eSE"
+SOLVER:
+  STEPS: (60000, 80000)
+  MAX_ITER: 90000
+OUTPUT_DIR: "MRCN-V2-39-1x"
