@@ -13,7 +13,7 @@ from fvcore.common.timer import Timer
 from PIL import Image
 
 from detectron2.structures import Boxes, BoxMode, PolygonMasks
-from detectron2.data.detection_utils import convert_image_to_rgb
+
 from .. import DatasetCatalog, MetadataCatalog
 
 """
@@ -145,7 +145,16 @@ def load_coco_json(json_file, image_root, dataset_name=None, extra_annotation_ke
         record["file_name"] = os.path.join(image_root, img_dict["file_name"])
         record["height"] = img_dict["height"]
         record["width"] = img_dict["width"]
+        record["spacing3D"] = img_dict["spacing3D"]
+        record['diameter'] = img_dict['diameter']
+        record['DICOM_window'] = img_dict['DICOM_window']
+        record['gender'] = img_dict['gender']
+        record['age'] = img_dict['age']
+        record['norm_location'] = img_dict['norm_location']
+
+
         image_id = record["image_id"] = img_dict["id"]
+
 
         objs = []
         for anno in anno_dict_list:
@@ -471,7 +480,6 @@ if __name__ == "__main__":
     os.makedirs(dirname, exist_ok=True)
     for d in dicts:
         img = np.array(Image.open(d["file_name"]))
-        img = convert_image_to_rgb(img, "L")
         visualizer = Visualizer(img, metadata=meta)
         vis = visualizer.draw_dataset_dict(d)
         fpath = os.path.join(dirname, os.path.basename(d["file_name"]))

@@ -215,7 +215,15 @@ class GeneralizedRCNN(nn.Module):
         assert not self.training
 
         images = self.preprocess_image(batched_inputs)
+
+        if self.use_3d_fusion:
+            _, _, w, h = images.tensor.size()
+            images.tensor = torch.reshape(images.tensor, (-1, 3, w, h))
+
         features = self.backbone(images.tensor)
+
+        if self.use_3d_fusion:
+            features, images = self.feature_fuse(features, images)
 
         if detected_instances is None:
             if self.proposal_generator:

@@ -24,6 +24,8 @@ from detectron2.structures import Boxes, BoxMode, pairwise_iou
 from detectron2.utils.logger import create_small_table
 
 from .evaluator import DatasetEvaluator
+from detectron2.config import cfg
+from .detection_eval import sens_at_FP
 
 
 class COCOEvaluator(DatasetEvaluator):
@@ -115,6 +117,7 @@ class COCOEvaluator(DatasetEvaluator):
             outputs: the outputs of a COCO model. It is a list of dicts with key
                 "instances" that contains :class:`Instances`.
         """
+        # import pdb; pdb.set_trace()
         for input, output in zip(inputs, outputs):
             prediction = {"image_id": input["image_id"]}
 
@@ -159,6 +162,8 @@ class COCOEvaluator(DatasetEvaluator):
         Evaluate predictions on the given tasks.
         Fill self._results with the metrics of the tasks.
         """
+        # import pdb; pdb.set_trace()
+
         self._logger.info("Preparing results for COCO format ...")
         coco_results = list(itertools.chain(*[x["instances"] for x in predictions]))
 
@@ -170,7 +175,7 @@ class COCOEvaluator(DatasetEvaluator):
             for result in coco_results:
                 category_id = result["category_id"]
                 assert (
-                    category_id in reverse_id_mapping
+                        category_id in reverse_id_mapping
                 ), "A prediction has category_id={}, which is not available in the dataset.".format(
                     category_id
                 )
@@ -192,6 +197,18 @@ class COCOEvaluator(DatasetEvaluator):
                 "unofficial" if self._use_fast_impl else "official"
             )
         )
+        # deepleision prediction block
+        # import pdb; pdb.set_trace()
+        all_boxes, all_scores, all_gts = process_coco_predictions_gt(self._coco_api, coco_results)
+
+        ### deepleision detection
+        self._logger.info('\nDetection accuracy:')
+        self._logger.info('Sensitivity @ %s average FPs per image:', str(cfg.TEST.VAL_FROC_FP))
+
+        det_res = sens_at_FP(all_boxes, all_gts, cfg.TEST.VAL_FROC_FP, cfg.TEST.IOU_TH)  # cls 0 is background
+        self._logger.info(', '.join(['%.4f' % v for v in det_res]))
+        self._logger.info('mean of %s: %.4f', str(cfg.TEST.VAL_FROC_FP[:4]), np.mean(det_res[:4]))
+
         for task in sorted(tasks):
             coco_eval = (
                 _evaluate_predictions_on_coco(
@@ -494,7 +511,7 @@ def _evaluate_box_proposals(dataset_predictions, coco_api, thresholds=None, area
 
 
 def _evaluate_predictions_on_coco(
-    coco_gt, coco_results, iou_type, kpt_oks_sigmas=None, use_fast_impl=True
+        coco_gt, coco_results, iou_type, kpt_oks_sigmas=None, use_fast_impl=True
 ):
     """
     Evaluate the coco results using COCOEval API.
@@ -509,7 +526,7 @@ def _evaluate_predictions_on_coco(
         # We remove the bbox field to let mask AP use mask area.
         for c in coco_results:
             c.pop("bbox", None)
-
+    # import pdb; pdb.set_trace()
     coco_dt = coco_gt.loadRes(coco_results)
     coco_eval = (COCOeval_opt if use_fast_impl else COCOeval)(coco_gt, coco_dt, iou_type)
 
@@ -536,3 +553,47 @@ def _evaluate_predictions_on_coco(
     coco_eval.summarize()
 
     return coco_eval
+
+
+def process_coco_predictions_gt(coco_gt, coco_results):
+    # import pdb; pdb.set_trace()
+
+    coco_results = copy.deepcopy(coco_results)
+    all_boxes = [];
+    all_scores = [];
+    all_gts = []
+
+    coco_dt = coco_gt.loadRes(coco_results)
+    img_ids = coco_dt.getImgIds()
+    for img_id in img_ids:
+        # process prediction results
+        dt_ann_ids = coco_dt.getAnnIds(img_id)
+        dt_anns = coco_dt.loadAnns(dt_ann_ids)
+        dt_bboxes = [];
+        dt_scores = []
+
+        for dt_ann in dt_anns:
+            ann_bbox = dt_ann['bbox']
+            ann_score = dt_ann['score']
+
+            dt_bboxes.append(ann_bbox)
+            dt_scores.append(ann_score)
+        if dt_bboxes != []:
+            all_boxes.append(np.array(dt_bboxes))
+            all_scores.append(np.array(dt_scores))
+
+            # process gt results
+            gt_ann_ids = coco_gt.getAnnIds(img_id)
+            gt_anns = coco_gt.loadAnns(gt_ann_ids)
+            gt_bboxes = []
+            for gt_ann in gt_anns:
+                ann_bbox = gt_ann['bbox']
+
+                gt_bboxes.append(ann_bbox)
+
+            all_gts.append(np.array(gt_bboxes))
+    # import pdb; pdb.set_trace()
+
+    all_boxes = [np.column_stack((b, s.reshape((-1, 1)))) for (b, s) in zip(all_boxes, all_scores)]
+
+    return all_boxes, all_scores, all_gts

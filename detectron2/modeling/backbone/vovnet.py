@@ -360,7 +360,7 @@ class VoVNet(Backbone):
 
     def forward(self, x):
         outputs = {}
-        x = self.stem(x)
+        x = self.stem(x.float())
         if "stem" in self._out_features:
             outputs["stem"] = x
         for name in self.stage_names:

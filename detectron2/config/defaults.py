@@ -75,7 +75,6 @@ _C.INPUT.CROP.TYPE = "relative_range"
 # pixels if CROP.TYPE is "absolute"
 _C.INPUT.CROP.SIZE = [0.9, 0.9]
 
-
 # Whether the model needs RGB, YUV, HSV etc.
 # Should be one of the modes defined here, as we use PIL to read the image:
 # https://pillow.readthedocs.io/en/stable/handbook/concepts.html#concept-modes
@@ -87,10 +86,21 @@ _C.INPUT.FORMAT = "BGR"
 _C.INPUT.MASK_FORMAT = "polygon"  # alternative: "bitmask"
 
 # slice number
-_C.INPUT.SLICE_NUM = 9
-_C.INPUT.IGNORE_EMPTY = True
-# 3dce options
+# _C.INPUT.SLICE_NUM = 3
 _C.INPUT.NUM_IMAGES_3DCE = 3
+_C.INPUT.IGNORE_EMPTY = True
+
+# Deeplesion
+_C.INPUT.SLICE_INTV = 2
+_C.INPUT.NUM_SLICES = 3
+_C.INPUT.WINDOWING = [-1024, 1050] #  3071
+_C.INPUT.IMG_DO_CLIP = True
+_C.INPUT.DATA_AUG_POSITION = True
+_C.INPUT.NORM_SPACING = .8
+_C.INPUT.DATA_AUG_SCALE = [.8, 1.2]
+_C.INPUT.DATA_AUG_3D = -0.5
+_C.INPUT.MAX_IM_SIZE = 512
+_C.INPUT.IMAGE_MEAN = 50.
 
 # -----------------------------------------------------------------------------
 # Dataset
@@ -144,7 +154,6 @@ _C.MODEL.BACKBONE.FREEZE_AT = -1
 _C.MODEL.USE_3D_FUSION = False
 _C.MODEL.BACKBONE.IN_CHANNELS = 256
 _C.MODEL.BACKBONE.OUT_CHANNELS = 256
-
 
 # ---------------------------------------------------------------------------- #
 # VOVNet options
@@ -619,6 +628,9 @@ _C.TEST.AUG.FLIP = True
 
 _C.TEST.PRECISE_BN = CN({"ENABLED": False})
 _C.TEST.PRECISE_BN.NUM_ITER = 200
+## deeplesion related evaluation metrics
+_C.TEST.VAL_FROC_FP = [.5, 1, 2, 4, 8, 16]
+_C.TEST.IOU_TH = .5
 
 # ---------------------------------------------------------------------------- #
 # Misc options

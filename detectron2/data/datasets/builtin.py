@@ -55,6 +55,12 @@ _PREDEFINED_SPLITS_COCO["coco_lesion"] = {
     "coco_test_all": ("3d_slice_origin/test", "coco_json/test/single_14cls_2.json"),
 }
 
+_PREDEFINED_SPLITS_COCO["coco_deeplesion"] = {
+    "coco_deeplesion_train": ("trainset/image", "trainset/annotation/annotation.json"),
+    "coco_deeplesion_val": ("validset/image", "validset/annotation/annotation.json"),
+    "coco_deeplesion_test": ("testset/image", "testset/annotation/annotation.json"),
+}
+
 _PREDEFINED_SPLITS_COCO["coco_person"] = {
     "keypoints_coco_2014_train": (
         "coco/train2014",
@@ -249,7 +255,7 @@ def register_all_ade20k(root):
 if __name__.endswith(".builtin"):
     # Register them all under "./datasets"
     # _root = os.getenv("DETECTRON2_DATASETS", "datasets")
-    _root = '/data/ms_data'
+    _root = '/mnt/users/data/DeepLesion/DeepLesionCOCOStyle/'
     register_all_coco(_root)
     register_all_lvis(_root)
     register_all_cityscapes(_root)

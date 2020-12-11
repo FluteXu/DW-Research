@@ -1,9 +1,7 @@
-_BASE_: "../Base-RCNN-VoVNet-FPN.yaml"
-INPUT:
-  NUM_IMAGES_3DCE: 3
+_BASE_: "../Base-DeepLesion-RCNN-VoVNet-FPN.yaml"
 MODEL:
   USE_3D_FUSION: True
-  WEIGHTS: "/home/wangcheng/ms-project/checkpoints/vovnet57_ese_detectron2.pth"
+  WEIGHTS: "/mnt/users/.cache/torch/checkpoints/vovnet57_ese_detectron2.pth"
   MASK_ON: True
   VOVNET:
     CONV_BODY : "V-57-eSE"
@@ -13,4 +11,6 @@ MODEL:
 SOLVER:
   STEPS: (60000, 80000)
   MAX_ITER: 90000
-OUTPUT_DIR: "MRCN-V2-57-1x"
+#  STEPS: (210000, 250000)
+#  MAX_ITER: 270000
+OUTPUT_DIR: "/checkpoints/MRCN-V2-57-1x-3dce"

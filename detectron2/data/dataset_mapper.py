@@ -1,16 +1,16 @@
 # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved
-import os
-import cv2
 import copy
 import logging
 import numpy as np
 from typing import List, Optional, Union
 import torch
-from PIL import Image
+
 from detectron2.config import configurable
-from detectron2.data.detection_utils import convert_image_to_rgb
+
 from . import detection_utils as utils
 from . import transforms as T
+from detectron2.config import cfg
+import os
 
 """
 This file contains the default mapping that's applied to "dataset dicts".
@@ -49,7 +49,7 @@ class DatasetMapper:
         keypoint_hflip_indices: Optional[np.ndarray] = None,
         precomputed_proposal_topk: Optional[int] = None,
         recompute_boxes: bool = False,
-        image_slice_num: int = 3
+        # image_slice_num: int = 3
     ):
         """
         NOTE: this interface is experimental.
@@ -80,7 +80,7 @@ class DatasetMapper:
         self.keypoint_hflip_indices = keypoint_hflip_indices
         self.proposal_topk          = precomputed_proposal_topk
         self.recompute_boxes        = recompute_boxes
-        self.image_slice_num        = image_slice_num
+        # self.image_slice_num        = image_slice_num
         # fmt: on
         logger = logging.getLogger(__name__)
         logger.info("Augmentations used in training: " + str(augmentations))
@@ -102,7 +102,7 @@ class DatasetMapper:
             "instance_mask_format": cfg.INPUT.MASK_FORMAT,
             "use_keypoint": cfg.MODEL.KEYPOINT_ON,
             "recompute_boxes": recompute_boxes,
-            "image_slice_num": cfg.INPUT.SLICE_NUM,
+            # "image_slice_num": cfg.INPUT.SLICE_NUM,
         }
         if cfg.MODEL.KEYPOINT_ON:
             ret["keypoint_hflip_indices"] = utils.create_keypoint_hflip_indices(cfg.DATASETS.TRAIN)
@@ -115,32 +115,6 @@ class DatasetMapper:
             )
         return ret
 
-    @classmethod
-    def vis_transform(cls, input, prior_flag):
-        from detectron2.utils.visualizer import Visualizer
-
-        dirname = "coco-data-trans-vis"
-        if not os.path.exists(dirname):
-            os.mkdir(dirname)
-
-        if prior_flag:
-            img = np.array(Image.open(input["file_name"]))
-            img = convert_image_to_rgb(img, "L")
-            visualizer = Visualizer(img, None)
-            vis = visualizer.draw_dataset_dict(input)
-            fpath = os.path.join(dirname, os.path.basename(input["file_name"]))
-            print('vis_transform fpath: ', fpath)
-            vis.save(fpath)
-        else:
-            center_idx = int(len(input["image"])/2)
-            img = input["image"][center_idx]
-            # img = convert_image_to_rgb(img.permute(1, 2, 0), self.input_format)
-            img = convert_image_to_rgb(img, "L")
-            v_gt = Visualizer(img, None)
-            v_gt = v_gt.overlay_instances(boxes=input["instances"].gt_boxes)
-            fpath = os.path.join(dirname, os.path.basename(input["file_name"]))
-            print('vis_transform fpath: ', fpath)
-            v_gt.save(fpath)
 
     def __call__(self, dataset_dict):
         """
@@ -151,13 +125,99 @@ class DatasetMapper:
             dict: a format that builtin models in detectron2 accept
         """
         dataset_dict = copy.deepcopy(dataset_dict)  # it will be modified by code below
-        # prior to transform
-        # self.vis_transform(dataset_dict, True)
-
         # USER: Write your own image loading if it's not from a file
+
+        image_fn = dataset_dict["file_name"]
+        # bounding boxes
+        boxes0 = np.array(dataset_dict['annotations'][0]['bbox'])
+        boxes_new_xyxy = np.array([0.0, 0.0, 0.0, 0.0])
+        boxes_new_xyxy[0] = boxes0[0].copy()
+        boxes_new_xyxy[1] = boxes0[1].copy()
+        boxes_new_xyxy[2] = (boxes0[0] + boxes0[2]).copy()
+        boxes_new_xyxy[3] = (boxes0[1] + boxes0[3]).copy()
+        boxes_new_xyxy -= 1 # coordinates in info file start from 1
+        # segmentation
+        segmentations0 = np.array(dataset_dict['annotations'][0]['segmentation'])
+        segmentations0 -= 1 # coordinates in info file start from 1
+        segmentation_new = segmentations0.copy()
+
+        # parameter settings
+        spacing3D = np.array(dataset_dict['spacing3D'])
+        spacing = spacing3D[0]
+        slice_intv = spacing3D[2]  # slice intervals
+        diameters = np.array(dataset_dict['diameter'])
+        window = np.array(dataset_dict['DICOM_window'])
+        gender = float(dataset_dict['gender'] == 'M')
+        age = dataset_dict['age']/100
+        if np.isnan(age) or age == 0:
+            age = .5
+        z_coord = dataset_dict['norm_location'][2]
+        num_slice = cfg.INPUT.NUM_SLICES * cfg.INPUT.NUM_IMAGES_3DCE
+
+        if self.is_train and cfg.INPUT.DATA_AUG_3D is not False:
+            slice_radius = diameters.min() / 2 * spacing / slice_intv * abs(cfg.INPUT.DATA_AUG_3D)  # lesion should not be too small
+            slice_radius = int(slice_radius)
+           #  print(slice_radius)
+            if slice_radius > 0:
+                if cfg.INPUT.DATA_AUG_3D > 0:
+                    delta = np.random.randint(0, slice_radius+1)
+                  #  print('AUG: ',delta)
+                else:  # give central slice higher prob
+                    ar = np.arange(slice_radius+1)
+                    p = slice_radius-ar.astype(float)
+                    delta = np.random.choice(ar, p=p/p.sum())
+                   # print('NO AUG: ', delta)
+                if np.random.rand(1) > .5:
+                    delta = -delta
+
+                img_name = dataset_dict["file_name"].split('/')[-1]
+                path_name = dataset_dict["file_name"][:-len(img_name)-1]
+                slicename = img_name.split('_')[-1]
+                dirname = img_name[:-len(slicename)-1]
+                slice_idx = int(slicename[:-4])
+                image_fn1 = '%s%s%03d.png' % (dirname, '_', slice_idx + delta)
+                if os.path.exists(os.path.join(path_name, image_fn1)):
+                    image_fn = os.path.join(path_name, image_fn1)
+
+        # load images
         # image = utils.read_image(dataset_dict["file_name"], format=self.image_format)
-        image = utils.read_image_cv2(dataset_dict["file_name"], self.image_slice_num)
-        utils.check_image_size(dataset_dict, image)
+        # image = utils.read_image_cv2(dataset_dict["file_name"], self.image_slice_num)
+        image, im_scale, crop = utils.load_pred_img(image_fn, spacing, slice_intv,
+                                                    cfg.INPUT.IMG_DO_CLIP, self.is_train, num_slice)
+
+        image -= cfg.INPUT.IMAGE_MEAN
+
+        # clip black border
+        if cfg.INPUT.IMG_DO_CLIP:
+            # bounding boxes
+            offset = [crop[2], crop[0]]
+            boxes_new_xyxy -= offset * 2
+            # segmentations
+            segmentation_new -= offset * 4
+
+        # rescale image
+        if im_scale != 1:
+            # bounding boxes
+            boxes_new_xyxy *= im_scale
+            # segmentations
+            segmentation_new *= im_scale
+
+        if self.use_instance_mask:
+            mask = utils.gen_mask_polygon_from_recist(segmentation_new[0])
+
+
+        if (not cfg.INPUT.IMG_DO_CLIP) and im_scale == 1:
+            utils.check_image_size(dataset_dict, image)
+
+        else:
+            boxes_new = [0.0, 0.0, 0.0, 0.0]
+
+            boxes_new[0] = boxes_new_xyxy[0]; boxes_new[1] = boxes_new_xyxy[1]
+            boxes_new[2] = boxes_new_xyxy[2] - boxes_new_xyxy[0]
+            boxes_new[3] = boxes_new_xyxy[3] - boxes_new_xyxy[1]
+            dataset_dict['annotations'][0]['bbox'] = boxes_new
+
+            dataset_dict['annotations'][0]['segmentation'] = segmentation_new.tolist()
 
         # USER: Remove if you don't do semantic/panoptic segmentation.
         if "sem_seg_file_name" in dataset_dict:
@@ -165,9 +225,11 @@ class DatasetMapper:
         else:
             sem_seg_gt = None
 
+
         aug_input = T.AugInput(image, sem_seg=sem_seg_gt)
         transforms = self.augmentations(aug_input)
         image, sem_seg_gt = aug_input.image, aug_input.sem_seg
+
 
         image_shape = image.shape[:2]  # h, w
         # Pytorch's dataloader is efficient on torch.Tensor due to shared-memory,
@@ -219,6 +281,12 @@ class DatasetMapper:
                 instances.gt_boxes = instances.gt_masks.get_bounding_boxes()
             dataset_dict["instances"] = utils.filter_empty_instances(instances)
 
-        # posterior to transform
-        # self.vis_transform(dataset_dict, False)
+            # import gc
+            # import objgraph
+            #
+            # gc.collect()
+            # objgraph.show_most_common_types(limit=10)
+            # objgraph.show_growth()
+            # print('\n')
+
         return dataset_dict

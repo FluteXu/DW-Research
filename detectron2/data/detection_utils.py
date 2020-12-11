@@ -13,6 +13,7 @@ import numpy as np
 import pycocotools.mask as mask_util
 import torch
 from fvcore.common.file_io import PathManager
+from scipy.ndimage.morphology import binary_fill_holes, binary_opening, binary_dilation
 from PIL import Image
 
 from detectron2.structures import (
@@ -28,6 +29,7 @@ from detectron2.structures import (
 
 from . import transforms as T
 from .catalog import MetadataCatalog
+from detectron2.config import cfg
 
 __all__ = [
     "SizeMismatchError",
@@ -42,6 +44,12 @@ __all__ = [
     "create_keypoint_hflip_indices",
     "filter_empty_instances",
     "read_image",
+    "read_image_cv2",
+    "load_pred_img",
+    "windowing",
+    "get_mask",
+    "get_range",
+    "gen_mask_polygon_from_recist"
 ]
 
 
@@ -111,10 +119,10 @@ def convert_image_to_rgb(image, format):
         image = np.dot(image, np.array(_M_YUV2RGB).T)
         image = image * 255.0
     else:
-        # if format == "L":
-        #     image = image[:, :, 0]
-        image = image.astype(np.uint8)
-        image = np.asarray(Image.fromarray(image, mode=format).convert("RGB"))
+        if format == "L":
+            # image = image[:, :, 0]
+            image = image.astype(np.uint8)
+            image = np.asarray(Image.fromarray(image, mode=format).convert("RGB"))
     return image
 
 
@@ -194,13 +202,13 @@ def read_image_cv2(c_path, n_neigh):
         n_neigh (int): input slice number
     """
 
-    img_path= c_path[: -len(c_path.split('/')[-1])]
+    img_path = c_path[: -len(c_path.split('/')[-1])]
     cent_slice = int(re.findall(re.compile(r'/(\d+).png'), c_path)[0])
     assert n_neigh % 2 == 1, "#input slices should be odd"
     half_n_neigh = n_neigh // 2
 
     paths = [[], []]
-    for offset in range(half_n_neigh+1):
+    for offset in range(half_n_neigh + 1):
         for sign, container in zip([-1, 1], paths):
             slice_id = cent_slice + offset * sign
             f_path = os.path.join(img_path, '{:03d}.png'.format(slice_id))
@@ -210,6 +218,199 @@ def read_image_cv2(c_path, n_neigh):
     paths = paths[0][::-1] + paths[1][1:]
     channels = [cv2.imread(f_path, cv2.IMREAD_UNCHANGED) for f_path in paths]
     return np.stack(channels, axis=2)
+
+
+def load_pred_img(c_path, spacing, slice_intv, do_clip, is_train, num_slice=3):
+    im, mask = load_multislice_img_16bit_png(c_path, slice_intv, do_clip, num_slice)
+
+    # do image windowing
+    im = windowing(im, cfg.INPUT.WINDOWING)
+
+    if do_clip:  # clip black border
+        c = get_range(mask, margin=0)
+        if cfg.INPUT.DATA_AUG_POSITION is not False and is_train:
+            offset_aug = np.random.randint(16) - 8
+            c[0] += offset_aug
+            offset_aug = np.random.randint(16) - 8
+            c[2] += offset_aug
+            c = [max(0, val) for val in c]
+        im = im[c[0]:c[1] + 1, c[2]:c[3] + 1, :]
+        # mask = mask[c[0]:c[1] + 1, c[2]:c[3] + 1]
+        # print(im.shape)
+    else:
+        c = [0, im.shape[0] - 1, 0, im.shape[1] - 1]
+
+    im_shape = im.shape[0:2]
+
+    if spacing is not None and cfg.INPUT.NORM_SPACING > 0:  # spacing adjust, will overwrite simple scaling
+        im_scale = float(spacing) / cfg.INPUT.NORM_SPACING
+    else:
+        im_scale = float(cfg.INPUT.MAX_IM_SIZE) / float(np.max(im_shape))  # simple scaling
+
+    if cfg.INPUT.DATA_AUG_SCALE is not False and is_train:
+        aug_scale = cfg.INPUT.DATA_AUG_SCALE
+        im_scale *= np.random.rand(1) * (aug_scale[1] - aug_scale[0]) + aug_scale[0]
+    max_shape = np.max(im_shape) * im_scale
+    if max_shape > cfg.INPUT.MAX_IM_SIZE:
+        im_scale1 = float(cfg.INPUT.MAX_IM_SIZE) / max_shape
+        im_scale *= im_scale1
+
+    if is_train:
+        im_scale = im_scale[0]
+    else:
+        if type(im_scale) is list:
+            im_scale = im_scale[0]
+
+    if im_scale != 1:
+        im = cv2.resize(im, None, None, fx=im_scale, fy=im_scale, interpolation=cv2.INTER_LINEAR)
+        im = im.astype(np.float32, copy=False)
+
+    return im, im_scale, c
+
+
+def load_multislice_img_16bit_png(c_path, slice_intv, do_clip, num_slice):
+    data_cache = {}
+
+    def _load_data_from_png(c_path, delta=0):
+        imname1 = get_slice_name(c_path, delta)
+        if imname1 not in data_cache.keys():
+            data_cache[imname1] = cv2.imread(imname1, -1)
+            assert data_cache[imname1] is not None, 'file reading error: ' + imname1
+            # if data_cache[imname1] is None:
+            #     print('file reading error:'x, imname1)
+        return data_cache[imname1]
+
+    _load_data = _load_data_from_png
+    im_cur = _load_data(c_path)
+
+    mask = get_mask(im_cur) if do_clip else None
+
+    if cfg.INPUT.SLICE_INTV == 0 or np.isnan(slice_intv) or slice_intv < 0:
+        ims = [im_cur] * num_slice  # only use the central slice
+
+    else:
+        ims = [im_cur]
+        # find neighboring slices of im_cure
+        rel_pos = float(cfg.INPUT.SLICE_INTV) / slice_intv
+        a = rel_pos - np.floor(rel_pos)
+        b = np.ceil(rel_pos) - rel_pos
+        if a == 0:  # required SLICE_INTV is a divisible to the actual slice_intv, don't need interpolation
+            for p in range(int((num_slice - 1) / 2)):
+                im_prev = _load_data(c_path, - rel_pos * (p + 1))
+                im_next = _load_data(c_path, rel_pos * (p + 1))
+                ims = [im_prev] + ims + [im_next]
+        else:
+            for p in range(int((num_slice - 1) / 2)):
+                intv1 = rel_pos * (p + 1)
+                slice1 = _load_data(c_path, - np.ceil(intv1))
+                slice2 = _load_data(c_path, - np.floor(intv1))
+                im_prev = a * slice1 + b * slice2  # linear interpolation
+
+                slice1 = _load_data(c_path, np.ceil(intv1))
+                slice2 = _load_data(c_path, np.floor(intv1))
+                im_next = a * slice1 + b * slice2
+
+                ims = [im_prev] + ims + [im_next]
+
+    ims = [im.astype(float) for im in ims]
+    im = cv2.merge(ims)
+    im = im.astype(np.float32,
+                   copy=False) - 32768  # there is an offset in the 16-bit png files, intensity - 32768 = Hounsfield unit
+
+    return im, mask
+
+
+def windowing(im, win):
+    """scale intensity from win[0]~win[1] to float numbers in 0~255"""
+    im1 = im.astype(float)
+    im1 -= win[0]
+    im1 /= win[1] - win[0]
+    im1[im1 > 1] = 1
+    im1[im1 < 0] = 0
+    im1 *= 255
+    return im1
+
+
+def get_mask(im):
+    """use a intensity threshold to roughly find the mask of the body"""
+    th = 32000  # an approximate background intensity value
+    mask = im > th
+    mask = binary_opening(mask, structure=np.ones((7, 7)))  # roughly remove bed
+    # mask = binary_dilation(mask)
+    # mask = binary_fill_holes(mask, structure=np.ones((11,11)))  # fill parts like lung
+
+    if mask.sum() == 0:  # maybe atypical intensity
+        mask = im * 0 + 1
+    return mask.astype(dtype=np.int32)
+
+
+def get_range(mask, margin=0):
+    """Get up, down, left, right extreme coordinates of a binary mask"""
+    idx = np.nonzero(mask)
+    u = max(0, idx[0].min() - margin)
+    d = min(mask.shape[0] - 1, idx[0].max() + margin)
+    l = max(0, idx[1].min() - margin)
+    r = min(mask.shape[1] - 1, idx[1].max() + margin)
+    return [u, d, l, r]
+
+
+def get_slice_name(c_path, delta=0):
+    """Infer slice name with an offset"""
+    if delta == 0:
+        return c_path
+    delta = int(delta)
+    slice_idx = int(c_path.split('_')[-1][:-4])
+    dirname = c_path[:-len(c_path.split('_')[-1])]
+
+    imname1 = '%s%03d.png' % (dirname, slice_idx + delta)
+
+    # if the slice is not in the dataset, use its neighboring slice
+    while not os.path.exists(imname1):
+        # print('file not found:', imname1)
+        delta -= np.sign(delta)
+        imname1 = '%s%03d.png' % (dirname, slice_idx + delta)
+        if delta == 0:
+            break
+
+    return imname1
+
+
+def gen_mask_polygon_from_recist(recist):
+    """Generate ellipse from RECIST for weakly-supervised segmentation"""
+    x11, y11, x12, y12, x21, y21, x22, y22 = recist
+    axis1 = np.linalg.solve(np.array([[x11, y11], [x12, y12]]), np.array([1, 1]))
+    axis2 = np.linalg.solve(np.array([[x21, y21], [x22, y22]]), np.array([1, 1]))
+    center = np.linalg.solve(np.array([[axis1[0], axis1[1]], [axis2[0], axis2[1]]]), np.array([1, 1]))
+    centered_recist = recist - np.tile(center, (4,))
+    centered_recist = np.reshape(centered_recist, (4, 2))
+    pt_angles = np.arctan2(centered_recist[:, 1], centered_recist[:, 0])
+    pt_lens = np.sqrt(np.sum(centered_recist ** 2, axis=1))
+
+    ord = [0, 2, 1, 3, 0]
+    grid = .1
+    rotated_pts = []
+    for p in range(4):
+        # pt1 = centered_recist[ord[p]]
+        # pt2 = centered_recist[ord[p+1]]
+        if (pt_angles[ord[p]] < pt_angles[ord[p + 1]] and pt_angles[ord[p + 1]] - pt_angles[ord[p]] < np.pi) \
+                or (pt_angles[ord[p]] - pt_angles[ord[p + 1]] > np.pi):  # counter-clockwise
+            angles = np.arange(0, np.pi / 2, grid)
+        else:
+            angles = np.arange(0, -np.pi / 2, -grid)
+
+        xs = np.cos(angles) * pt_lens[ord[p]]
+        ys = np.sin(angles) * pt_lens[ord[p + 1]]
+        r = pt_angles[ord[p]]
+        rotated_pts1 = np.matmul(np.array([[np.cos(r), -np.sin(r)], [np.sin(r), np.cos(r)]]),
+                                 np.vstack((xs, ys)))
+        rotated_pts.append(rotated_pts1)
+    rotated_pts = np.hstack(rotated_pts)
+    decentered_pts = rotated_pts + center.reshape((2, 1))
+    polygon = decentered_pts.transpose().ravel()
+    # for p in polygon:
+    #     print('%.4f'%p, ',',)
+    # print('\n',recist)
+    return polygon.tolist()
 
 
 def check_image_size(dataset_dict, image):
@@ -281,7 +482,7 @@ def transform_proposals(dataset_dict, image_shape, transforms, *, proposal_topk,
 
 
 def transform_instance_annotations(
-    annotation, transforms, image_size, *, keypoint_hflip_indices=None
+        annotation, transforms, image_size, *, keypoint_hflip_indices=None
 ):
     """
     Apply transforms to box, segmentation and keypoints annotations of a single instance.
@@ -547,10 +748,10 @@ def gen_crop_transform_with_instance(crop_size, image_size, instance):
     bbox = BoxMode.convert(instance["bbox"], instance["bbox_mode"], BoxMode.XYXY_ABS)
     center_yx = (bbox[1] + bbox[3]) * 0.5, (bbox[0] + bbox[2]) * 0.5
     assert (
-        image_size[0] >= center_yx[0] and image_size[1] >= center_yx[1]
+            image_size[0] >= center_yx[0] and image_size[1] >= center_yx[1]
     ), "The annotation bounding box is outside of the image!"
     assert (
-        image_size[0] >= crop_size[0] and image_size[1] >= crop_size[1]
+            image_size[0] >= crop_size[0] and image_size[1] >= crop_size[1]
     ), "Crop size is larger than image size!"
 
     min_yx = np.maximum(np.floor(center_yx).astype(np.int32) - crop_size, 0)
@@ -599,24 +800,25 @@ def build_augmentation(cfg, is_train):
     Returns:
         list[Augmentation]
     """
-    if is_train:
-        min_size = cfg.INPUT.MIN_SIZE_TRAIN
-        max_size = cfg.INPUT.MAX_SIZE_TRAIN
-        sample_style = cfg.INPUT.MIN_SIZE_TRAIN_SAMPLING
-    else:
-        min_size = cfg.INPUT.MIN_SIZE_TEST
-        max_size = cfg.INPUT.MAX_SIZE_TEST
-        sample_style = "choice"
-    augmentation = [T.ResizeShortestEdge(min_size, max_size, sample_style)]
-    if is_train and cfg.INPUT.RANDOM_FLIP != "none":
-        augmentation.append(
-            T.RandomFlip(
-                horizontal=cfg.INPUT.RANDOM_FLIP == "horizontal",
-                vertical=cfg.INPUT.RANDOM_FLIP == "vertical",
-            )
-        )
-    if is_train:
-        augmentation.append(T.RandomZFlip())
+    # if is_train:
+    #     min_size = cfg.INPUT.MIN_SIZE_TRAIN
+    #     max_size = cfg.INPUT.MAX_SIZE_TRAIN
+    #     sample_style = cfg.INPUT.MIN_SIZE_TRAIN_SAMPLING
+    # else:
+    #     min_size = cfg.INPUT.MIN_SIZE_TEST
+    #     max_size = cfg.INPUT.MAX_SIZE_TEST
+    #     sample_style = "choice"
+    # augmentation = [T.ResizeShortestEdge(min_size, max_size, sample_style)]
+    # if is_train and cfg.INPUT.RANDOM_FLIP != "none":
+    #     augmentation.append(
+    #         T.RandomFlip(
+    #             horizontal=cfg.INPUT.RANDOM_FLIP == "horizontal",
+    #             vertical=cfg.INPUT.RANDOM_FLIP == "vertical",
+    #         )
+    #     )
+    # if is_train:
+    #     augmentation.append(T.RandomZFlip())
+    augmentation = []
     return augmentation
 
 
